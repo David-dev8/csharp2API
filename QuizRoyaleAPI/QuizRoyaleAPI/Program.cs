@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using QuizRoyaleAPI.DataAccess;
+using QuizRoyaleAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +12,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<QuizRoyaleDbContext>(options => 
-options.UseMySql(ServerVersion.AutoDetect(
-    builder.Configuration.GetConnectionString("QuizRoyaleDatabase"))));
+options.UseMySql(
+    builder.Configuration.GetConnectionString("QuizRoyaleDatabase"),
+    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("QuizRoyaleDatabase"))));
+
+builder.Services.AddScoped<IQuestionService, DbQuestionService>();
 
 var app = builder.Build();
 

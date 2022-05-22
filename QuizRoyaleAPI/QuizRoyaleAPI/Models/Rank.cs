@@ -2,19 +2,15 @@
 
 namespace QuizRoyaleAPI.Models
 {
-    public class Category
+    public class Rank
     {
         public int Id { get; set; }
-        
-        [MaxLength(50)]
-        public string Name { get; set; }
-
-        [MaxLength(30)]
-        public string Color { get; set; }
 
         [MaxLength(255)]
-        public string Picture { get; set; }
+        public string Name { get; set; }
 
-        public IList<Question> Questions { get; set; }
+        public string Color { get; set; }
+
+        public IList<Division> Divisions { get; set; }
     }
 }
