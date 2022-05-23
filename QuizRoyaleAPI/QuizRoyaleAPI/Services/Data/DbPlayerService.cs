@@ -12,24 +12,23 @@ namespace QuizRoyaleAPI.Services
             _context = context;
         }
 
-        public void CreatePlayer(string username)
+        public int CreatePlayer(string username)
         {
-            _context.Players.Add(new Player()
-            {
-                Username = username
-            });
+            var player = new Player(username);
+            _context.Players.Add(player);
+            _context.SaveChanges(); // todo duplicate entry
+            return player.Id;
+        }
+
+        public void DeletePlayer(int userId)
+        {
+            _context.Players.Remove(GetPlayer(userId));
             _context.SaveChanges();
         }
 
-        public void DeletePlayer(string username)
+        public Player GetPlayer(int userId)
         {
-            _context.Players.Remove(GetPlayerByUsername(username));
-            _context.SaveChanges();
-        }
-
-        public Player GetPlayerByUsername(string username)
-        {
-            Player? player = _context.Players.Where(p => p.Username == username).FirstOrDefault();
+            Player? player = _context.Players.Find(userId);
             if(player == null)
             {
                 //throw new PlayerNotFoundException();

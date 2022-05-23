@@ -9,14 +9,14 @@ namespace QuizRoyaleAPI.DataAccess
         {
         }
 
-        public DbSet<Question> Questions { get; set; }
+        public DbSet<Question> Questions { get; set; } = null!;
 
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Categories { get; set; } = null!;
 
-        public DbSet<Player> Players { get; set; }
+        public DbSet<Player> Players { get; set; } = null!;
 
-        public DbSet<Rank> Ranks { get; set; }
+        public DbSet<Rank> Ranks { get; set; } = null!;
 
-        public DbSet<Item> Items { get; set; }
+        public DbSet<Item> Items { get; set; } = null!;
     }
 }

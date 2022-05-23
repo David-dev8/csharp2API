@@ -12,5 +12,12 @@ namespace QuizRoyaleAPI.Models
         public string Picture { get; set; }
 
         public double UpperBound { get; set; }
+
+        public Division(int number, string picture, double upperBound)
+        {
+            Number = number;
+            Picture = picture;
+            UpperBound = upperBound;
+        }
     }
 }

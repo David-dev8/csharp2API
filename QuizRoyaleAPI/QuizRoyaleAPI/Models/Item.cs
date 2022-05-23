@@ -12,13 +12,21 @@ namespace QuizRoyaleAPI.Models
         [MaxLength(255)]
         public string Picture { get; set; }
 
-        public ItemType ItemmType { get; set; }
+        public ItemType ItemType { get; set; }
 
         public PaymentType PaymentType { get; set; }
 
         public int Cost { get; set; }
 
-        public IList<Player> PlayersWhoAcquired { get; set; }
+        public IList<Player> PlayersWhoAcquired { get; set; } = new List<Player>();
+
+        public Item(string name, string picture, ItemType itemType, PaymentType paymentType)
+        {
+            Name = name;
+            Picture = picture;
+            ItemType = itemType;
+            PaymentType = paymentType;
+        }
     }
 
     public enum ItemType

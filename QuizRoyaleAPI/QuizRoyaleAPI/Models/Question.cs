@@ -11,8 +11,13 @@ namespace QuizRoyaleAPI.Models
 
         public char RightAnswer { get; set; }
 
-        public IList<Answer> Possibilities { get; set; }
+        public IList<Answer> Possibilities { get; set; } = new List<Answer>();
 
         public int CategoryId { get; set; }
+
+        public Question(string content)
+        {
+            Content = content;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace QuizRoyaleAPI.DTOs
+﻿namespace QuizRoyaleAPI.Models
 {
     public class PlayerDTO
     {

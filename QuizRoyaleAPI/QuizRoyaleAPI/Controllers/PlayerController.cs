@@ -1,24 +1,47 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Models;
 using QuizRoyaleAPI.Services;
+using QuizRoyaleAPI.Services.Auth;
+using System.Security.Claims;
 
 namespace QuizRoyaleAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class PlayerController : Controller
     {
-        private readonly IQuestionService _questionService;
+        private readonly IPlayerService _playerService;
+        private readonly IAuthService _authService;
 
-        public PlayerController(IQuestionService questionService)
+        public PlayerController(IPlayerService playerService, IAuthService authService)
         {
-            _questionService = questionService;
+            _playerService = playerService;
+            _authService = authService;
         }
 
         [HttpGet]
-        public IActionResult GetPlayers()
+        public IActionResult GetPlayer()
         {
-            return Ok(_questionService.getQuestions());
+            return Ok(_playerService.GetPlayer(User.GetID()));
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult CreatePlayer([FromBody] PlayerCreationDTO player)
+        {
+            int id = _playerService.CreatePlayer(player.Username);
+            string token = _authService.GetToken(id);
+            return Ok(new TokenDTO(token));
+        }
+
+        [HttpDelete]
+        public IActionResult DeletePlayer()
+        {
+            _playerService.DeletePlayer(1);
+            return Ok();
         }
     }
 }

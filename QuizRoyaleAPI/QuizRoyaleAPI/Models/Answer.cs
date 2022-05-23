@@ -12,5 +12,11 @@ namespace QuizRoyaleAPI.Models
         public string Description { get; set; }
 
         public int QuestionId { get; set; }
+
+        public Answer(char code, string description)
+        {
+            Code = code;
+            Description = description;
+        }
     }
 }
