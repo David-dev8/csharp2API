@@ -1,4 +1,6 @@
-﻿using QuizRoyaleAPI.DataAccess;
+﻿using Microsoft.EntityFrameworkCore;
+using QuizRoyaleAPI.DataAccess;
+using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.Services
@@ -15,8 +17,12 @@ namespace QuizRoyaleAPI.Services
         public int CreatePlayer(string username)
         {
             var player = new Player(username);
+            if (_context.Players.Any(p => p.Username == username))
+            {
+                throw new UsernameTakenException();
+            }
             _context.Players.Add(player);
-            _context.SaveChanges(); // todo duplicate entry
+            _context.SaveChanges();
             return player.Id;
         }
 
@@ -31,7 +37,7 @@ namespace QuizRoyaleAPI.Services
             Player? player = _context.Players.Find(userId);
             if(player == null)
             {
-                //throw new PlayerNotFoundException();
+                throw new PlayerNotFoundException();
             }
             return player;
         }
