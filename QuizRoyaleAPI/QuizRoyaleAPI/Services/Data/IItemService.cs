@@ -8,8 +8,10 @@ namespace QuizRoyaleAPI.Services
         
         public IEnumerable<Item> GetItems(int userId);
 
-        public IEnumerable<Item> EquipItem(int userId, int itemId);
+        public IEnumerable<Item> GetActiveItems(int userId);
 
-        public IEnumerable<Item> BuyItem(int userId, int itemId);
+        public void EquipItem(int userId, int itemId);
+
+        public void ObtainItem(int userId, int itemId);
     }
 }

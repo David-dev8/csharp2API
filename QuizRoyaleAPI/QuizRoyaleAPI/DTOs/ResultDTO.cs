@@ -3,7 +3,7 @@
 namespace QuizRoyaleAPI.Models
 {
     public class ResultDTO
-    { 
+    {
         public Mode Mode { get; set; }
 
         public int RightAnswers { get; set; }
@@ -16,4 +16,5 @@ namespace QuizRoyaleAPI.Models
             RightAnswers = rightAnswers;
             Position = position;
         }
+    }
 }

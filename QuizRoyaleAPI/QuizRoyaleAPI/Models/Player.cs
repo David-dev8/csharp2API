@@ -20,7 +20,7 @@ namespace QuizRoyaleAPI.Models
 
         public IList<Result> Results { get; set; }
 
-        public IList<Item> AcquiredItems { get; set; }
+        public IList<AcquiredItem> AcquiredItems { get; set; }
 
         [NotMapped]
         public string? Title
@@ -51,12 +51,13 @@ namespace QuizRoyaleAPI.Models
         {
             Username = username;
             Results = new List<Result>();
-            AcquiredItems = new List<Item>();
+            AcquiredItems = new List<AcquiredItem>();
         }
 
         private string? GetItemByType(ItemType type)
         {
-            return AcquiredItems.Where(i => i.ItemType == type).SingleOrDefault()?.Picture;
+            return "";
+            //return AcquiredItems.Where(i => i.ItemType == type).SingleOrDefault()?.Picture;
         }
     }
 }
