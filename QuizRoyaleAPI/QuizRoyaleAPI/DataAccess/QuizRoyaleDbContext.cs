@@ -18,5 +18,13 @@ namespace QuizRoyaleAPI.DataAccess
         public DbSet<Rank> Ranks { get; set; } = null!;
 
         public DbSet<Item> Items { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AcquiredItem>(entity =>
+            {
+                entity.HasKey(ai => new { ai.ItemId, ai.PlayerId });
+            });
+        }
     }
 }

@@ -3,7 +3,7 @@ using QuizRoyaleAPI.DataAccess;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
 
-namespace QuizRoyaleAPI.Services
+namespace QuizRoyaleAPI.Services.Data
 {
     public class DbPlayerService : IPlayerService
     {

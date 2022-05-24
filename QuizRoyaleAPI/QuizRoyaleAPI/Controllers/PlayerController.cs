@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Models;
-using QuizRoyaleAPI.Services;
+using QuizRoyaleAPI.Services.Data;
 using QuizRoyaleAPI.Services.Auth;
-using System.Security.Claims;
 
 namespace QuizRoyaleAPI.Controllers
 {

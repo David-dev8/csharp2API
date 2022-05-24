@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using QuizRoyaleAPI.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using QuizRoyaleAPI.Services.Data;
 
 namespace QuizRoyaleAPI.Controllers
 {
@@ -8,7 +9,7 @@ namespace QuizRoyaleAPI.Controllers
     [Route("[controller]")]
     public class PlayerDataController : Controller
     {
-        private readonly IPlayerDataService _playerDataService; // todo validation post
+        private readonly IPlayerDataService _playerDataService;
 
         public PlayerDataController(IPlayerDataService playerDataService)
         {

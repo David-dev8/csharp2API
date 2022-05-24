@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuizRoyaleAPI.Services;
+using QuizRoyaleAPI.Services.Data;
 
 namespace QuizRoyaleAPI.Controllers
 {

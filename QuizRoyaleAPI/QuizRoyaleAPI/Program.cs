@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using QuizRoyaleAPI.DataAccess;
 using QuizRoyaleAPI.Services;
 using QuizRoyaleAPI.Services.Auth;
+using QuizRoyaleAPI.Services.Data;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +47,7 @@ options.UseMySql(
 // Voeg services voor data toe
 builder.Services.AddScoped<IQuestionService, DbQuestionService>();
 builder.Services.AddScoped<IPlayerService, DbPlayerService>();
+builder.Services.AddScoped<IItemService, DbItemService>();
 builder.Services.AddScoped<IAuthService, UserJWTAuthService>();
 
 // JWT Tokens

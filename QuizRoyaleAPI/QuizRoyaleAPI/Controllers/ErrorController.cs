@@ -15,8 +15,8 @@ namespace QuizRoyaleAPI.Controllers
 
             int status = error switch
             {
-                PlayerNotFoundException => StatusCodes.Status404NotFound,
-                UsernameTakenException => StatusCodes.Status400BadRequest,
+                PlayerNotFoundException or ItemNotFoundException => StatusCodes.Status404NotFound,
+                UsernameTakenException or InsufficientFundsException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
 

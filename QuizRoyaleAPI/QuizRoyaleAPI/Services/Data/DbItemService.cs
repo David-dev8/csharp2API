@@ -18,10 +18,10 @@ namespace QuizRoyaleAPI.Services.Data
             Player player = GetPlayer(userId);
             Item item = GetItem(itemId);
 
-            if(CanAfford(item, player))
+            if (CanAfford(item, player))
             {
                 player.AcquiredItems.Add(new AcquiredItem { ItemId = item.Id });
-            } 
+            }
             else
             {
                 throw new InsufficientFundsException();
