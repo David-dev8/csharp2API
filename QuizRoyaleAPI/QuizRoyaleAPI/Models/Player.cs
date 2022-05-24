@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuizRoyaleAPI.Models
 {
@@ -11,28 +12,51 @@ namespace QuizRoyaleAPI.Models
         [MaxLength(100)]
         public string Username { get; set; }
 
-        [MaxLength(255)]
-        public string? Title { get; set; }
-
-        [MaxLength(255)]
-        public string? ProfilePicture { get; set; }
-
-        [MaxLength(255)]
-        public string? Border { get; set; }
-
         public int AmountOfWins { get; set; }
 
         public int Coins { get; set; }
 
         public int XP { get; set; }
 
-        public IList<Result> Results { get; set; } = new List<Result>();
+        public IList<Result> Results { get; set; }
 
-        public IList<Item> AcquiredItems { get; set; } = new List<Item>();
+        public IList<Item> AcquiredItems { get; set; }
+
+        [NotMapped]
+        public string? Title
+        {
+            get
+            {
+                return GetItemByType(ItemType.TITLE);
+            }
+        }
+
+        [NotMapped]
+        public string? ProfilePicture { 
+            get
+            {
+                return GetItemByType(ItemType.PROFILE_PICTURE);
+            }
+        }
+
+        [NotMapped]
+        public string? Border {
+            get
+            {
+                return GetItemByType(ItemType.BORDER);
+            }
+        }
 
         public Player(string username)
         {
             Username = username;
+            Results = new List<Result>();
+            AcquiredItems = new List<Item>();
+        }
+
+        private string? GetItemByType(ItemType type)
+        {
+            return AcquiredItems.Where(i => i.ItemType == type).SingleOrDefault()?.Picture;
         }
     }
 }

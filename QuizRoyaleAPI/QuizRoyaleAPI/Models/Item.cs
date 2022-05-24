@@ -18,7 +18,7 @@ namespace QuizRoyaleAPI.Models
 
         public int Cost { get; set; }
 
-        public IList<Player> PlayersWhoAcquired { get; set; } = new List<Player>();
+        public IList<Player> PlayersWhoAcquired { get; set; }
 
         public Item(string name, string picture, ItemType itemType, PaymentType paymentType)
         {
@@ -26,6 +26,7 @@ namespace QuizRoyaleAPI.Models
             Picture = picture;
             ItemType = itemType;
             PaymentType = paymentType;
+            PlayersWhoAcquired = new List<Player>();
         }
     }
 

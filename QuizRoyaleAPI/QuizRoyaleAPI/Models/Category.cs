@@ -15,13 +15,14 @@ namespace QuizRoyaleAPI.Models
         [MaxLength(255)]
         public string Picture { get; set; }
 
-        public IList<Question> Questions { get; set; } = new List<Question>();
+        public IList<Question> Questions { get; set; }
 
         public Category(string name, string color, string picture)
         {
             Name = name;
             Color = color;
             Picture = picture;
+            Questions = new List<Question>();
         }
     }
 }

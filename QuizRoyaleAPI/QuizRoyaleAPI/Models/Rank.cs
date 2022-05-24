@@ -11,12 +11,13 @@ namespace QuizRoyaleAPI.Models
 
         public string Color { get; set; }
 
-        public IList<Division> Divisions { get; set; } = new List<Division>();
+        public IList<Division> Divisions { get; set; };
 
         public Rank(string name, string color)
         {
             Name = name;
             Color = color;
+            Divisions = new List<Division>();
         }
     }
 }

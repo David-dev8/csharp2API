@@ -25,7 +25,13 @@ namespace QuizRoyaleAPI.Controllers
         [HttpGet]
         public IActionResult GetPlayer()
         {
-            return Ok(_playerService.GetPlayer(User.GetID()));
+            Player player = _playerService.GetPlayer(User.GetID());
+            return Ok(new PlayerDetailsDTO(
+                player.Username,
+                player.Coins,
+                player.XP,
+                player.AmountOfWins
+            ));
         }
 
         [AllowAnonymous]
@@ -40,7 +46,7 @@ namespace QuizRoyaleAPI.Controllers
         [HttpDelete]
         public IActionResult DeletePlayer()
         {
-            _playerService.DeletePlayer(1);
+            _playerService.DeletePlayer(User.GetID());
             return Ok();
         }
     }

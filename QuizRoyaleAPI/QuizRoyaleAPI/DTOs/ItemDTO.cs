@@ -15,5 +15,15 @@ namespace QuizRoyaleAPI.Models
         public PaymentType PaymentType { get; set; }
 
         public int Cost { get; set; }
+
+        public ItemDTO(int id, string name, string picture, ItemType itemType, PaymentType paymentType, int cost)
+        {
+            Id = id;
+            Name = name;
+            Picture = picture;
+            ItemType = itemType;
+            PaymentType = paymentType;
+            Cost = cost;
+        }
     }
 }

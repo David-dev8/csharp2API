@@ -9,5 +9,11 @@ namespace QuizRoyaleAPI.Models
         public int RightAnswers { get; set; }
 
         public int? Position { get; set; }
-    }
+
+        public ResultDTO(Mode mode, int rightAnswers, int? position)
+        {
+            Mode = mode;
+            RightAnswers = rightAnswers;
+            Position = position;
+        }
 }
