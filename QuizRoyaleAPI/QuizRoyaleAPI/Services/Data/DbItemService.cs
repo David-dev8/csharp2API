@@ -8,6 +8,14 @@ namespace QuizRoyaleAPI.Services.Data
     {
         private readonly QuizRoyaleDbContext _context;
 
+        private static Dictionary<ItemType, int> s_equipLimits = new()
+        {
+            [ItemType.TITLE] = 1,
+            [ItemType.BORDER] = 1,
+            [ItemType.PROFILE_PICTURE] = 1,
+            [ItemType.BOOST] = 5
+        };
+
         public DbItemService(QuizRoyaleDbContext context)
         {
             _context = context;
@@ -40,8 +48,12 @@ namespace QuizRoyaleAPI.Services.Data
 
             foreach (AcquiredItem playerItem in UnequipItemsOfSameType(player, item.ItemType))
             {
-                playerItem.Equipped = playerItem.ItemId == item.Id; // todo transaction?
+                if(playerItem.ItemId == item.Id)
+                {
+                    playerItem.Equipped = true;
+                }
             }
+            _context.SaveChanges();
         }
 
         public IEnumerable<Item> GetItems()
@@ -91,8 +103,20 @@ namespace QuizRoyaleAPI.Services.Data
 
         private IEnumerable<AcquiredItem> UnequipItemsOfSameType(Player player, ItemType itemType)
         {
-            return player.AcquiredItems
+            IEnumerable<AcquiredItem> items = player.AcquiredItems
                 .Where(ai => _context.Items.Where(i => i.ItemType == itemType).Select(i => i.Id).Contains(ai.ItemId));
+
+            int amountOfTooMuchItems = s_equipLimits[itemType] - items.Count();
+            // Voeg 1 toe omdat we een nieuw open slot voor een item willen hebben
+            amountOfTooMuchItems++;
+
+            // Unequip alle items die teveel zijn
+            foreach(AcquiredItem item in items.Take(amountOfTooMuchItems))
+            {
+                item.Equipped = false;
+            }
+
+            return items;
         }
     }
 }

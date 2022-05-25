@@ -41,5 +41,29 @@ namespace QuizRoyaleAPI.Services.Data
             }
             return player;
         }
+
+        public InGamePlayerDTO GetPlayerInGame(string username)
+        {
+            Player? player = _context.Players.Where(p => p.Username == username).FirstOrDefault();
+            if (player == null)
+            {
+                throw new PlayerNotFoundException();
+            }
+
+            IEnumerable<Item> items = _context.Items.Where(i => player.AcquiredItems.Select(ai => ai.ItemId).Contains(i.Id));
+
+            return new InGamePlayerDTO(
+                player.Username,
+                GetItemByType(items, ItemType.TITLE)?.Picture,
+                GetItemByType(items, ItemType.PROFILE_PICTURE)?.Picture,
+                GetItemByType(items, ItemType.BORDER)?.Picture,
+                new List<BoosterDTO>()
+            );
+        }
+
+        private Item? GetItemByType(IEnumerable<Item> items, ItemType itemType)
+        {
+            return items.Where(i => i.ItemType == itemType).SingleOrDefault();
+        }
     }
 }
