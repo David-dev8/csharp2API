@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Models;
-using QuizRoyaleAPI.Services.Data;
 using QuizRoyaleAPI.Services.Auth;
+using QuizRoyaleAPI.Services.Data;
 
 namespace QuizRoyaleAPI.Controllers
 {
@@ -24,13 +23,7 @@ namespace QuizRoyaleAPI.Controllers
         [HttpGet]
         public IActionResult GetPlayer()
         {
-            Player player = _playerService.GetPlayer(User.GetID());
-            return Ok(new PlayerDetailsDTO(
-                player.Username,
-                player.Coins,
-                player.XP,
-                player.AmountOfWins
-            ));
+            return Ok(_playerService.GetPlayer(User.GetID()));
         }
 
         [AllowAnonymous]
@@ -38,8 +31,7 @@ namespace QuizRoyaleAPI.Controllers
         public IActionResult CreatePlayer([FromBody] PlayerCreationDTO player)
         {
             int id = _playerService.CreatePlayer(player.Username);
-            string token = _authService.GetToken(id);
-            return Ok(new TokenDTO(token));
+            return Ok(_authService.GetToken(id));
         }
 
         [HttpDelete]

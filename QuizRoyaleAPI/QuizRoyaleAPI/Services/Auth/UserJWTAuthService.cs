@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using QuizRoyaleAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -13,7 +14,13 @@ namespace QuizRoyaleAPI.Services.Auth
             _configuration = configuration;
         }
 
-        public string GetToken(int id)
+        public TokenDTO GetToken(int id)
+        {
+            return new TokenDTO(GenerateToken(id));
+            
+        }
+
+        private string GenerateToken(int id)
         {
             return new JwtSecurityTokenHandler().WriteToken(
                 new JwtSecurityToken(

@@ -1,45 +1,50 @@
-﻿using Microsoft.EntityFrameworkCore;
-using QuizRoyaleAPI.DataAccess;
+﻿using QuizRoyaleAPI.DataAccess;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
+using QuizRoyaleAPI.Services.Auth;
 
 namespace QuizRoyaleAPI.Services.Data
 {
     public class DbPlayerService : IPlayerService
     {
         private readonly QuizRoyaleDbContext _context;
+        private readonly IAuthService _authService;
 
-        public DbPlayerService(QuizRoyaleDbContext context)
+        public DbPlayerService(QuizRoyaleDbContext context, IAuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
 
         public int CreatePlayer(string username)
         {
             var player = new Player(username);
+            // Controleer of de gegeven gebruikersnaam niet al gekozen is
             if (_context.Players.Any(p => p.Username == username))
             {
                 throw new UsernameTakenException();
             }
             _context.Players.Add(player);
             _context.SaveChanges();
+            
             return player.Id;
         }
 
         public void DeletePlayer(int userId)
         {
-            _context.Players.Remove(GetPlayer(userId));
+            _context.Players.Remove(GetPlayerFromDB(userId));
             _context.SaveChanges();
         }
 
-        public Player GetPlayer(int userId)
+        public PlayerDetailsDTO GetPlayer(int userId)
         {
-            Player? player = _context.Players.Find(userId);
-            if(player == null)
-            {
-                throw new PlayerNotFoundException();
-            }
-            return player;
+            Player player = GetPlayerFromDB(userId);
+            return new PlayerDetailsDTO(
+                player.Username,
+                player.Coins,
+                player.XP,
+                player.AmountOfWins
+            );
         }
 
         public InGamePlayerDTO GetPlayerInGame(string username)
@@ -54,16 +59,40 @@ namespace QuizRoyaleAPI.Services.Data
 
             return new InGamePlayerDTO(
                 player.Username,
-                GetItemByType(items, ItemType.TITLE)?.Picture,
-                GetItemByType(items, ItemType.PROFILE_PICTURE)?.Picture,
-                GetItemByType(items, ItemType.BORDER)?.Picture,
-                new List<BoosterDTO>()
+                GetSingleItemByType(items, ItemType.TITLE)?.Picture,
+                GetSingleItemByType(items, ItemType.PROFILE_PICTURE)?.Picture,
+                GetSingleItemByType(items, ItemType.BORDER)?.Picture,
+                GetItemsByType(items, ItemType.BOOST)
             );
         }
 
-        private Item? GetItemByType(IEnumerable<Item> items, ItemType itemType)
+        private Player GetPlayerFromDB(int userId)
+        {
+            Player? player = _context.Players.Find(userId);
+            if (player == null)
+            {
+                throw new PlayerNotFoundException();
+            }
+            return player;
+        }
+
+        private Item? GetSingleItemByType(IEnumerable<Item> items, ItemType itemType)
         {
             return items.Where(i => i.ItemType == itemType).SingleOrDefault();
+        }
+
+        private IEnumerable<ItemDTO> GetItemsByType(IEnumerable<Item> items, ItemType itemType)
+        {
+            return items.Where(i => i.ItemType == itemType).Select(i =>
+            {
+                return new ItemDTO(
+                    i.Id,
+                    i.Name,
+                    i.Picture,
+                    i.ItemType,
+                    i.PaymentType,
+                    i.Cost, i.Description);
+            });
         }
     }
 }

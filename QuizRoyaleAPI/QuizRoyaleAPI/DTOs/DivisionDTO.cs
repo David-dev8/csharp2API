@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace QuizRoyaleAPI.Models
+﻿namespace QuizRoyaleAPI.Models
 {
     public class DivisionDTO
     {

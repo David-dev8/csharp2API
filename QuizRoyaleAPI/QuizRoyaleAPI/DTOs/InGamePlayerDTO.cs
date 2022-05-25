@@ -10,9 +10,9 @@
 
         public string? Border { get; set; }
 
-        public IList<BoosterDTO> Boosters { get; set; }
+        public IEnumerable<ItemDTO> Boosters { get; set; }
 
-        public InGamePlayerDTO(string username, string? title, string? profilePicture, string? border, IList<BoosterDTO> boosters)
+        public InGamePlayerDTO(string username, string? title, string? profilePicture, string? border, IEnumerable<ItemDTO> boosters)
         {
             Username = username;
             Title = title;

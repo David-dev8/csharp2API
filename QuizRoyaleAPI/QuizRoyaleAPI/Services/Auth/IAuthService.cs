@@ -1,7 +1,9 @@
-﻿namespace QuizRoyaleAPI.Services.Auth
+﻿using QuizRoyaleAPI.Models;
+
+namespace QuizRoyaleAPI.Services.Auth
 {
     public interface IAuthService
     {
-        public string GetToken(int id);
+        public TokenDTO GetToken(int id);
     }
 }

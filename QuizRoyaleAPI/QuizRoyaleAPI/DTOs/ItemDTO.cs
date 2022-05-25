@@ -16,7 +16,9 @@ namespace QuizRoyaleAPI.Models
 
         public int Cost { get; set; }
 
-        public ItemDTO(int id, string name, string picture, ItemType itemType, PaymentType paymentType, int cost)
+        public string? Description { get; set; }
+
+        public ItemDTO(int id, string name, string picture, ItemType itemType, PaymentType paymentType, int cost, string? description)
         {
             Id = id;
             Name = name;
@@ -24,6 +26,7 @@ namespace QuizRoyaleAPI.Models
             ItemType = itemType;
             PaymentType = paymentType;
             Cost = cost;
+            Description = description;
         }
     }
 }

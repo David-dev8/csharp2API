@@ -18,6 +18,8 @@ namespace QuizRoyaleAPI.Models
 
         public int Cost { get; set; }
 
+        public string? Description { get; set; }
+
         public IList<AcquiredItem> PlayersWhoAcquired { get; set; }
 
         public Item(string name, string picture, ItemType itemType, PaymentType paymentType)
