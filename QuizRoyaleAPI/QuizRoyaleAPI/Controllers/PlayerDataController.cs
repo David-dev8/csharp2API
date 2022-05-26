@@ -31,13 +31,13 @@ namespace QuizRoyaleAPI.Controllers
         [HttpGet("Result")]
         public IActionResult GetResults()
         {
-            return Ok(_playerDataService.GetResults(1));
+            return Ok(_playerDataService.GetResults(User.GetID()));
         }
 
         [HttpGet("Rank")]
         public IActionResult GetRank()
         {
-            return Ok(_playerDataService.GetRank(1));
+            return Ok(_playerDataService.GetDivision(User.GetID()));
         }
     }
 }

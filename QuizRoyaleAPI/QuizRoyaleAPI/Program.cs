@@ -39,15 +39,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Database context
-builder.Services.AddDbContext<QuizRoyaleDbContext>(options => 
-options.UseMySql(
-    builder.Configuration.GetConnectionString("QuizRoyaleDatabase"),
-    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("QuizRoyaleDatabase"))));
+builder.Services.AddDbContext<QuizRoyaleDbContext>(options => options
+    .UseLazyLoadingProxies()
+    .UseMySql(
+        builder.Configuration.GetConnectionString("QuizRoyaleDatabase"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("QuizRoyaleDatabase"))));
 
 // Voeg services voor data toe
 builder.Services.AddScoped<IQuestionService, DbQuestionService>();
 builder.Services.AddScoped<IPlayerService, DbPlayerService>();
 builder.Services.AddScoped<IItemService, DbItemService>();
+builder.Services.AddScoped<IPlayerDataService, DbPlayerDataService>();
 builder.Services.AddScoped<IAuthService, UserJWTAuthService>();
 
 // JWT Tokens

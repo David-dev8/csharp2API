@@ -34,6 +34,7 @@ namespace QuizRoyaleAPI.Services.Data
             {
                 throw new InsufficientFundsException();
             }
+            _context.SaveChanges();
         }
 
         public void EquipItem(int userId, int itemId)
@@ -56,19 +57,32 @@ namespace QuizRoyaleAPI.Services.Data
             _context.SaveChanges();
         }
 
-        public IEnumerable<Item> GetItems()
+        public IEnumerable<ItemDTO> GetItems()
         {
-            return _context.Items;
+            return _context.Items.Select(ConvertToItemDTO);
         }
 
-        public IEnumerable<Item> GetItems(int userId)
+        public IEnumerable<ItemDTO> GetItems(int userId)
         {
-            return _context.Items.Where(i => GetPlayer(userId).AcquiredItems.Select(ai => ai.ItemId).Contains(i.Id));
+            IEnumerable<int> AcquiredItemsIDs = GetPlayer(userId).AcquiredItems.Select(ai => ai.ItemId);
+            return _context.Items.Where(i => AcquiredItemsIDs.Contains(i.Id)).Select(ConvertToItemDTO);
         }
 
-        public IEnumerable<Item> GetActiveItems(int userId)
+        public IEnumerable<ItemDTO> GetActiveItems(int userId)
         {
-            throw new NotImplementedException();
+            IEnumerable<int> ActiveItems = GetPlayer(userId).AcquiredItems.Where(ai => ai.Equipped).Select(ai => ai.ItemId);
+            return _context.Items.Where(i => ActiveItems.Contains(i.Id)).Select(ConvertToItemDTO);
+        }
+
+        private ItemDTO ConvertToItemDTO(Item i)
+        {
+            return new ItemDTO(
+                i.Id,
+                i.Name,
+                i.Picture,
+                i.ItemType,
+                i.PaymentType,
+                i.Cost, i.Description);
         }
 
         private Player GetPlayer(int userId)
@@ -81,16 +95,6 @@ namespace QuizRoyaleAPI.Services.Data
             return player;
         }
 
-        private bool CanAfford(Item item, Player player)
-        {
-            int budget = item.PaymentType switch
-            {
-                PaymentType.XP => player.XP,
-                _ => player.Coins,
-            };
-            return budget >= item.Cost;
-        }
-
         private Item GetItem(int itemId)
         {
             Item? item = _context.Items.Find(itemId);
@@ -99,6 +103,16 @@ namespace QuizRoyaleAPI.Services.Data
                 throw new ItemNotFoundException();
             }
             return item;
+        }
+
+        private bool CanAfford(Item item, Player player)
+        {
+            int budget = item.PaymentType switch
+            {
+                PaymentType.XP => player.XP,
+                _ => player.Coins,
+            };
+            return budget >= item.Cost;
         }
 
         private IEnumerable<AcquiredItem> UnequipItemsOfSameType(Player player, ItemType itemType)

@@ -13,6 +13,8 @@ namespace QuizRoyaleAPI.Models
 
         public double UpperBound { get; set; }
 
+        public int RankId { get; set; }
+
         public Division(int number, string picture, double upperBound)
         {
             Number = number;

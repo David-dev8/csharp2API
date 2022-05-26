@@ -11,7 +11,7 @@ namespace QuizRoyaleAPI.Models
 
         public char RightAnswer { get; set; }
 
-        public IList<Answer> Possibilities { get; set; }
+        public virtual ICollection<Answer> Possibilities { get; set; }
 
         public int CategoryId { get; set; }
 

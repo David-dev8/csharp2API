@@ -20,7 +20,7 @@ namespace QuizRoyaleAPI.Models
 
         public string? Description { get; set; }
 
-        public IList<AcquiredItem> PlayersWhoAcquired { get; set; }
+        public virtual ICollection<AcquiredItem> PlayersWhoAcquired { get; set; }
 
         public Item(string name, string picture, ItemType itemType, PaymentType paymentType)
         {
@@ -28,7 +28,6 @@ namespace QuizRoyaleAPI.Models
             Picture = picture;
             ItemType = itemType;
             PaymentType = paymentType;
-            PlayersWhoAcquired = new List<AcquiredItem>();
         }
     }
 

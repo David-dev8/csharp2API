@@ -4,11 +4,11 @@ namespace QuizRoyaleAPI.Services.Data
 {
     public interface IItemService
     {
-        public IEnumerable<Item> GetItems();
+        public IEnumerable<ItemDTO> GetItems();
         
-        public IEnumerable<Item> GetItems(int userId);
+        public IEnumerable<ItemDTO> GetItems(int userId);
 
-        public IEnumerable<Item> GetActiveItems(int userId);
+        public IEnumerable<ItemDTO> GetActiveItems(int userId);
 
         public void EquipItem(int userId, int itemId);
 

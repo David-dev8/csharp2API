@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuizRoyaleAPI.DataAccess;
 
@@ -10,9 +11,10 @@ using QuizRoyaleAPI.DataAccess;
 namespace QuizRoyaleAPI.Migrations
 {
     [DbContext(typeof(QuizRoyaleDbContext))]
-    partial class QuizRoyaleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220526112316_AddedMastery")]
+    partial class AddedMastery
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +125,7 @@ namespace QuizRoyaleAPI.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("RankId")
+                    b.Property<int?>("RankId")
                         .HasColumnType("int");
 
                     b.Property<double>("UpperBound")
@@ -133,7 +135,7 @@ namespace QuizRoyaleAPI.Migrations
 
                     b.HasIndex("RankId");
 
-                    b.ToTable("Divisions");
+                    b.ToTable("Division");
                 });
 
             modelBuilder.Entity("QuizRoyaleAPI.Models.Item", b =>
@@ -311,9 +313,7 @@ namespace QuizRoyaleAPI.Migrations
                 {
                     b.HasOne("QuizRoyaleAPI.Models.Rank", null)
                         .WithMany("Divisions")
-                        .HasForeignKey("RankId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RankId");
                 });
 
             modelBuilder.Entity("QuizRoyaleAPI.Models.Question", b =>

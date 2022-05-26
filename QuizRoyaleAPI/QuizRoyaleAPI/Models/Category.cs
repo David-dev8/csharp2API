@@ -15,7 +15,9 @@ namespace QuizRoyaleAPI.Models
         [MaxLength(255)]
         public string Picture { get; set; }
 
-        public IList<Question> Questions { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
+
+        public virtual ICollection<CategoryMastery> Mastery { get; set; }
 
         public Category(string name, string color, string picture)
         {
@@ -23,6 +25,7 @@ namespace QuizRoyaleAPI.Models
             Color = color;
             Picture = picture;
             Questions = new List<Question>();
+            Mastery = new List<CategoryMastery>();
         }
     }
 }

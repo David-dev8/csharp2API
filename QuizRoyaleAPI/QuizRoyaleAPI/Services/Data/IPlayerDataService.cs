@@ -4,10 +4,10 @@ namespace QuizRoyaleAPI.Services.Data
 {
     public interface IPlayerDataService
     {
-        public Rank GetRank(int userId);
+        public DivisionDTO GetDivision(int userId);
 
-        public IEnumerable<Result> GetResults(int userId);
+        public IEnumerable<ResultDTO> GetResults(int userId);
 
-        public IDictionary<Category, float> GetMastery(int userId);
+        public IEnumerable<MasteryDTO> GetMastery(int userId);
     }
 }

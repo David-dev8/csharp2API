@@ -11,7 +11,7 @@ namespace QuizRoyaleAPI.Models
 
         public string Color { get; set; }
 
-        public IList<Division> Divisions { get; set; }
+        public virtual IList<Division> Divisions { get; set; }
 
         public Rank(string name, string color)
         {

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuizRoyaleAPI.DataAccess;
 
@@ -10,9 +11,10 @@ using QuizRoyaleAPI.DataAccess;
 namespace QuizRoyaleAPI.Migrations
 {
     [DbContext(typeof(QuizRoyaleDbContext))]
-    partial class QuizRoyaleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220526133219_LazyLoading")]
+    partial class LazyLoading
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
