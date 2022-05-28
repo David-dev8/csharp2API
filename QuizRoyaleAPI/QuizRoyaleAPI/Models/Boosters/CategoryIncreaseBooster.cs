@@ -2,6 +2,7 @@
 {
     public class CategoryIncreaseBooster : Booster
     {
+
         public void use(Game game)
         {
 
