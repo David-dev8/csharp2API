@@ -12,19 +12,23 @@ namespace QuizRoyaleAPI.Services.Data
             _context = context;
         }
 
-        public IEnumerable<Category> GetCategories()
+        public IEnumerable<CategoryDTO> GetCategories()
         {
-            return _context.Categories.ToList();
+            return _context.Categories.Select(c => new CategoryDTO(
+                c.Id,
+                c.Name,
+                c.Color,
+                c.Picture
+            ));
         }
 
-        public IEnumerable<Question> GetQuestions()
+        public IEnumerable<QuestionDTO> GetQuestionByCategoryId(int categoryId)
         {
-            return _context.Questions.ToList();
-        }
-
-        public IEnumerable<Question> GetQuestionByCategoryId(int categoryId)
-        {
-            return _context.Categories.Find(categoryId).Questions;
+            return _context.Questions.Where(q => q.CategoryId == categoryId).Select(q => new QuestionDTO(
+                q.Content,
+                q.RightAnswer,
+                q.Possibilities
+            ));
         }
     }
 }
