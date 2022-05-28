@@ -8,12 +8,10 @@ namespace QuizRoyaleAPI.Services.Data
     public class DbPlayerService : IPlayerService
     {
         private readonly QuizRoyaleDbContext _context;
-        private readonly IAuthService _authService;
 
-        public DbPlayerService(QuizRoyaleDbContext context, IAuthService authService)
+        public DbPlayerService(QuizRoyaleDbContext context)
         {
             _context = context;
-            _authService = authService;
         }
 
         public int CreatePlayer(string username)

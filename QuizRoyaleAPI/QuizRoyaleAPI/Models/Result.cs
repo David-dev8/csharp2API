@@ -7,7 +7,7 @@ namespace QuizRoyaleAPI.Models
         public int Id { get; set; }
 
         [MaxLength(100)]
-        public Mode Mode { get; set; }
+        public Mode Mode { get; set; } // todo mode als string
 
         public int RightAnswers { get; set; }
 
