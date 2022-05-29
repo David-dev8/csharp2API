@@ -1,4 +1,4 @@
-﻿namespace QuizRoyaleAPI.Models
+﻿namespace QuizRoyaleAPI.DTOs
 {
     public class BadgeDTO
     {

@@ -1,9 +1,10 @@
 ﻿using QuizRoyaleAPI.DataAccess;
+using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
 using QuizRoyaleAPI.Models.BadgeRule;
 
-namespace QuizRoyaleAPI.Services.Data
+namespace QuizRoyaleAPI.Services.Data.Database
 {
     public class DbPlayerDataService : IPlayerDataService
     {

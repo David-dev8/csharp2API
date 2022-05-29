@@ -1,4 +1,4 @@
-﻿using QuizRoyaleAPI.Models;
+﻿using QuizRoyaleAPI.DTOs;
 
 namespace QuizRoyaleAPI.Services.Auth
 {

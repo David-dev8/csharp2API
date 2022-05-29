@@ -4,7 +4,13 @@
     {
         public bool HasEarned(Player player)
         {
-            return player.Mastery.Average(m => m.QuestionsRight / (double)m.AmountOfQuestions) > 1;
+            List<CategoryMastery> mastery = player.Mastery.ToList();
+            if(!mastery.Any())
+            {
+                return false;
+            }
+
+            return mastery.Average(m => m.QuestionsRight / (double)m.AmountOfQuestions) > 1;
         }
     }
 }

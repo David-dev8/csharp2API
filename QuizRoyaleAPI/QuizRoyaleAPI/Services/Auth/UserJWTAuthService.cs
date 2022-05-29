@@ -1,5 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using QuizRoyaleAPI.Models;
+using QuizRoyaleAPI.DTOs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 

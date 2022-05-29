@@ -1,4 +1,4 @@
-﻿using QuizRoyaleAPI.Models;
+﻿using QuizRoyaleAPI.DTOs;
 
 namespace QuizRoyaleAPI.Services.Data
 {
@@ -6,6 +6,6 @@ namespace QuizRoyaleAPI.Services.Data
     {
         public IEnumerable<CategoryDTO> GetCategories();
 
-        public IEnumerable<QuestionDTO> GetQuestionByCategoryId(int categoryId);
+        public QuestionDTO GetQuestionByCategoryId(int categoryId);
     }
 }

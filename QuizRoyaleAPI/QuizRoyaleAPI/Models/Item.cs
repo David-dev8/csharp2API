@@ -33,7 +33,7 @@ namespace QuizRoyaleAPI.Models
         }
     }
 
-    public enum ItemType
+    public enum ItemType // todo aparte file?
     {
         BORDER,
         PROFILE_PICTURE,

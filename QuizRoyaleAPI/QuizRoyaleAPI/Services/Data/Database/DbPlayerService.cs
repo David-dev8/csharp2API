@@ -1,9 +1,9 @@
 ﻿using QuizRoyaleAPI.DataAccess;
+using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
-using QuizRoyaleAPI.Services.Auth;
 
-namespace QuizRoyaleAPI.Services.Data
+namespace QuizRoyaleAPI.Services.Data.Database
 {
     public class DbPlayerService : IPlayerService
     {
@@ -53,7 +53,8 @@ namespace QuizRoyaleAPI.Services.Data
                 throw new PlayerNotFoundException();
             }
 
-            IEnumerable<Item> items = _context.Items.Where(i => player.AcquiredItems.Select(ai => ai.ItemId).Contains(i.Id));
+            IEnumerable<int> acquiredItemsIds = player.AcquiredItems.Select(ai => ai.ItemId).ToList();
+            IEnumerable<Item> items = _context.Items.Where(i => acquiredItemsIds.Contains(i.Id));
 
             return new InGamePlayerDTO(
                 player.Username,

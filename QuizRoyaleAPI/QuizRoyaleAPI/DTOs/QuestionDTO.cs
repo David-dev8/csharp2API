@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace QuizRoyaleAPI.Models
+﻿namespace QuizRoyaleAPI.DTOs
 {
     public class QuestionDTO
     {
@@ -8,9 +6,9 @@ namespace QuizRoyaleAPI.Models
 
         public char RightAnswer { get; set; }
 
-        public IEnumerable<Answer> Possibilities { get; set; }
+        public IEnumerable<AnswerDTO> Possibilities { get; set; }
 
-        public QuestionDTO(string content, char rightAnswer, IEnumerable<Answer> possibilities)
+        public QuestionDTO(string content, char rightAnswer, IEnumerable<AnswerDTO> possibilities)
         {
             Content = content;
             RightAnswer = rightAnswer;

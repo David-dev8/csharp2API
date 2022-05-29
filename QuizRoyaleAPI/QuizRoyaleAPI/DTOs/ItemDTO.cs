@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using QuizRoyaleAPI.Models;
 
-namespace QuizRoyaleAPI.Models
+namespace QuizRoyaleAPI.DTOs
 {
     public class ItemDTO
     {

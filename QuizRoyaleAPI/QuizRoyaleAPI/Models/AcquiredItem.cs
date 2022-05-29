@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace QuizRoyaleAPI.Models
+﻿namespace QuizRoyaleAPI.Models
 {
     public class AcquiredItem
     {
