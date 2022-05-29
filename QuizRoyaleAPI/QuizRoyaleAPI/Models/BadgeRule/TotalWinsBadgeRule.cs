@@ -4,7 +4,7 @@
     {
         public bool HasEarned(Player player)
         {
-            return true;
+            return player.Results.Where(r => r.Position == 1).Count() > 1;
         }
     }
 }

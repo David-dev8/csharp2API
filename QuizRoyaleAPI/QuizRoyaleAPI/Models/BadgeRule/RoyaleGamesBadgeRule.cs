@@ -4,7 +4,7 @@
     {
         public bool HasEarned(Player player)
         {
-            return true;
+            return player.Results.Where(r => r.Mode == Mode.QUIZ_ROYALE).Count() > 1;
         }
     }
 }

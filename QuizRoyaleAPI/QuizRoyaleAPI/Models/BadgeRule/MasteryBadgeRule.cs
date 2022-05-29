@@ -4,7 +4,7 @@
     {
         public bool HasEarned(Player player)
         {
-            throw new NotImplementedException();
+            return player.Mastery.Average(m => m.QuestionsRight / (double)m.AmountOfQuestions) > 1;
         }
     }
 }

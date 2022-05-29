@@ -4,7 +4,7 @@
     {
         public bool HasEarned(Player player)
         {
-            throw new NotImplementedException();
+            return player.AcquiredItems.Count() > 1;
         }
     }
 }
