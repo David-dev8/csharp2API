@@ -6,6 +6,7 @@ using QuizRoyaleAPI.Hubs;
 using QuizRoyaleAPI.Services;
 using QuizRoyaleAPI.Services.Auth;
 using QuizRoyaleAPI.Services.Data;
+using QuizRoyaleAPI.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,10 +43,6 @@ builder.Services.AddSwaggerGen(options =>
 // SignalR initieren
 builder.Services.AddSignalR();
 
-builder.Services.AddDbContext<QuizRoyaleDbContext>(options => 
-options.UseMySql(ServerVersion.AutoDetect(
-    builder.Configuration.GetConnectionString("QuizRoyaleDatabase"))));
-
 // Database context
 builder.Services.AddDbContext<QuizRoyaleDbContext>(options => options
     .UseLazyLoadingProxies()
@@ -59,6 +56,7 @@ builder.Services.AddScoped<IPlayerService, DbPlayerService>();
 builder.Services.AddScoped<IItemService, DbItemService>();
 builder.Services.AddScoped<IPlayerDataService, DbPlayerDataService>();
 builder.Services.AddScoped<IAuthService, UserJWTAuthService>();
+builder.Services.AddScoped<IGameFactory, GameFactory>();
 
 // JWT Tokens
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -47,6 +47,7 @@ namespace QuizRoyaleAPI.Services.Data
                 }
             ).Select(m => new MasteryDTO(
                 new CategoryDTO(
+                    1, //temp
                     m.Category.Name,
                     m.Category.Color,
                     m.Category.Picture),
