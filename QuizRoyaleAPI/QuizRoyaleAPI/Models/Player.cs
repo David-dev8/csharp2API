@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuizRoyaleAPI.Models
 {
@@ -24,12 +23,15 @@ namespace QuizRoyaleAPI.Models
 
         public virtual ICollection<CategoryMastery> Mastery { get; set; }
 
+        public virtual ICollection<Badge> Badges { get; set; }
+
         public Player(string username)
         {
             Username = username;
             Results = new List<Result>();
             Mastery = new List<CategoryMastery>();
             AcquiredItems = new List<AcquiredItem>();
+            Badges = new List<Badge>();
         }
     }
 }

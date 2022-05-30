@@ -25,7 +25,7 @@ namespace QuizRoyaleAPI.Controllers
         [HttpGet("Badges")]
         public IActionResult GetBadges()
         {
-            return Ok();
+            return Ok(_playerDataService.GetBadges(User.GetID()));
         }
 
         [HttpGet("Result")]

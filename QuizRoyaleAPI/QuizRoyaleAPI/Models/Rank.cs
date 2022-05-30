@@ -9,6 +9,7 @@ namespace QuizRoyaleAPI.Models
         [MaxLength(255)]
         public string Name { get; set; }
 
+        [MaxLength(30)]
         public string Color { get; set; }
 
         public virtual IList<Division> Divisions { get; set; }

@@ -1,16 +1,20 @@
 ﻿using QuizRoyaleAPI.DataAccess;
+using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
+using QuizRoyaleAPI.Models.BadgeRule;
 
-namespace QuizRoyaleAPI.Services.Data
+namespace QuizRoyaleAPI.Services.Data.Database
 {
     public class DbPlayerDataService : IPlayerDataService
     {
         private readonly QuizRoyaleDbContext _context;
+        private readonly BadgeRuleFactory _badgeRuleFactory; // todo dependency injection? addScoped voor GameFactory?
 
         public DbPlayerDataService(QuizRoyaleDbContext context)
         {
             _context = context;
+            _badgeRuleFactory = new BadgeRuleFactory();
         }
 
         public DivisionDTO GetDivision(int userId)
@@ -43,11 +47,11 @@ namespace QuizRoyaleAPI.Services.Data
                 (cm, c) => new
                 {
                     Category = c,
-                    SuccessRate = (cm.QuestionsRight / (double)cm.AmountOfQuestions)
+                    SuccessRate = cm.AmountOfQuestions == 0 ? 0 : cm.QuestionsRight / (double)cm.AmountOfQuestions
                 }
             ).Select(m => new MasteryDTO(
                 new CategoryDTO(
-                    1, //temp
+                    m.Category.Id,
                     m.Category.Name,
                     m.Category.Color,
                     m.Category.Picture),
@@ -61,6 +65,21 @@ namespace QuizRoyaleAPI.Services.Data
                 r.Mode,
                 r.RightAnswers,
                 r.Position
+            ));
+        }
+
+        public IEnumerable<BadgeDTO> GetBadges(int userId)
+        {
+            Player player = GetPlayer(userId);
+
+            IList<Badge> earnedBadges = player.Badges.ToList();
+            IList<Badge> badges = _context.Badges.ToList();
+
+            return badges.Select(b => new BadgeDTO(
+                b.Name,
+                b.Picture,
+                b.Description,
+                earnedBadges.Contains(b) || CanBeRewarded(b, player)
             ));
         }
 
@@ -78,6 +97,11 @@ namespace QuizRoyaleAPI.Services.Data
         {
             int position = _context.Players.OrderBy(p => p.AmountOfWins).ToList().FindIndex((p) => p.Id == userId);
             return (int)((double)100 * position / _context.Players.Count());
+        }
+
+        private bool CanBeRewarded(Badge badge, Player player)
+        {
+            return _badgeRuleFactory.GetRule(badge.Type, badge.Gradation).HasEarned(player);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace QuizRoyaleAPI.Models
     {
         public int Id { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Name { get; set; }
 
         [MaxLength(255)]
@@ -18,6 +18,7 @@ namespace QuizRoyaleAPI.Models
 
         public int Cost { get; set; }
 
+        [MaxLength(255)]
         public string? Description { get; set; }
 
         public virtual ICollection<AcquiredItem> PlayersWhoAcquired { get; set; }
@@ -28,10 +29,11 @@ namespace QuizRoyaleAPI.Models
             Picture = picture;
             ItemType = itemType;
             PaymentType = paymentType;
+            PlayersWhoAcquired = new List<AcquiredItem>();
         }
     }
 
-    public enum ItemType
+    public enum ItemType // todo aparte file?
     {
         BORDER,
         PROFILE_PICTURE,

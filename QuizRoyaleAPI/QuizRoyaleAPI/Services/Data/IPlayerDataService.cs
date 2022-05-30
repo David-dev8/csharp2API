@@ -1,4 +1,4 @@
-﻿using QuizRoyaleAPI.Models;
+﻿using QuizRoyaleAPI.DTOs;
 
 namespace QuizRoyaleAPI.Services.Data
 {
@@ -9,5 +9,7 @@ namespace QuizRoyaleAPI.Services.Data
         public IEnumerable<ResultDTO> GetResults(int userId);
 
         public IEnumerable<MasteryDTO> GetMastery(int userId);
+
+        public IEnumerable<BadgeDTO> GetBadges(int userId);
     }
 }

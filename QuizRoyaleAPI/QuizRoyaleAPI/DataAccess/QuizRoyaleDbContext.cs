@@ -21,6 +21,8 @@ namespace QuizRoyaleAPI.DataAccess
 
         public DbSet<Item> Items { get; set; } = null!;
 
+        public DbSet<Badge> Badges { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AcquiredItem>(entity =>

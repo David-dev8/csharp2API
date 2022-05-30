@@ -1,8 +1,9 @@
 ﻿using QuizRoyaleAPI.DataAccess;
+using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
 
-namespace QuizRoyaleAPI.Services.Data
+namespace QuizRoyaleAPI.Services.Data.Database
 {
     public class DbItemService : IItemService
     {
@@ -29,6 +30,7 @@ namespace QuizRoyaleAPI.Services.Data
             if (CanAfford(item, player))
             {
                 player.AcquiredItems.Add(new AcquiredItem { ItemId = item.Id });
+                PayForItem(item, player);
             }
             else
             {
@@ -47,13 +49,7 @@ namespace QuizRoyaleAPI.Services.Data
                 throw new ItemNotFoundException();
             }
 
-            foreach (AcquiredItem playerItem in UnequipItemsOfSameType(player, item.ItemType))
-            {
-                if(playerItem.ItemId == item.Id)
-                {
-                    playerItem.Equipped = true;
-                }
-            }
+            UnequipItemsOfSameType(player, item.ItemType).Single(i => i.ItemId == item.Id).Equipped = true;
             _context.SaveChanges();
         }
 
@@ -64,14 +60,14 @@ namespace QuizRoyaleAPI.Services.Data
 
         public IEnumerable<ItemDTO> GetItems(int userId)
         {
-            IEnumerable<int> AcquiredItemsIDs = GetPlayer(userId).AcquiredItems.Select(ai => ai.ItemId);
+            IEnumerable<int> AcquiredItemsIDs = GetPlayer(userId).AcquiredItems.Select(ai => ai.ItemId).ToList();
             return _context.Items.Where(i => AcquiredItemsIDs.Contains(i.Id)).Select(ConvertToItemDTO);
         }
 
         public IEnumerable<ItemDTO> GetActiveItems(int userId)
         {
-            IEnumerable<int> ActiveItems = GetPlayer(userId).AcquiredItems.Where(ai => ai.Equipped).Select(ai => ai.ItemId);
-            return _context.Items.Where(i => ActiveItems.Contains(i.Id)).Select(ConvertToItemDTO);
+            IEnumerable<int> ActiveItemsIDs = GetPlayer(userId).AcquiredItems.Where(ai => ai.Equipped).Select(ai => ai.ItemId).ToList();
+            return _context.Items.Where(i => ActiveItemsIDs.Contains(i.Id)).Select(ConvertToItemDTO);
         }
 
         private ItemDTO ConvertToItemDTO(Item i)
@@ -115,17 +111,27 @@ namespace QuizRoyaleAPI.Services.Data
             return budget >= item.Cost;
         }
 
+        private void PayForItem(Item item, Player player)
+        {
+            switch(item.PaymentType)
+            {
+                case PaymentType.COINS:
+                    player.Coins -= item.Cost;
+                    break;
+            };
+        }
+
         private IEnumerable<AcquiredItem> UnequipItemsOfSameType(Player player, ItemType itemType)
         {
-            IEnumerable<AcquiredItem> items = player.AcquiredItems
-                .Where(ai => _context.Items.Where(i => i.ItemType == itemType).Select(i => i.Id).Contains(ai.ItemId));
+            IEnumerable<int> itemsOfSameTypeIDs = _context.Items.Where(i => i.ItemType == itemType).Select(i => i.Id).ToList();
+            IEnumerable<AcquiredItem> items = player.AcquiredItems.Where(ai => itemsOfSameTypeIDs.Contains(ai.ItemId));
 
-            int amountOfTooMuchItems = s_equipLimits[itemType] - items.Count();
+            int amountOfTooMuchItems = items.Count() - s_equipLimits[itemType];
             // Voeg 1 toe omdat we een nieuw open slot voor een item willen hebben
             amountOfTooMuchItems++;
 
             // Unequip alle items die teveel zijn
-            foreach(AcquiredItem item in items.Take(amountOfTooMuchItems))
+            foreach (AcquiredItem item in items.Take(amountOfTooMuchItems))
             {
                 item.Equipped = false;
             }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuizRoyaleAPI.Models;
+using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Services.Auth;
 using QuizRoyaleAPI.Services.Data;
 
