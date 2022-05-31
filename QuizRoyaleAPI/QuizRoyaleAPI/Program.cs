@@ -18,6 +18,8 @@ builder.Services.AddDataServices();
 // JWT Tokens
 builder.Services.AddJWT(builder.Configuration.GetSection("Authentication:Key").Value);
 
+builder.WebHost.UseKestrel().UseIIS().UseIISIntegration();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
