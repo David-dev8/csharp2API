@@ -75,6 +75,39 @@ namespace TestTool
                 });
             });
 
+            connection.On<string, string, dynamic>("newQuestion", (catName, question, Awnsers) => 
+            {
+                this.Dispatcher.Invoke(() => {
+                    var newMessage = $"vraag in de catogorie {catName}, de vraag is {question}!";
+                    messagesList.Items.Add(newMessage);
+                    messagesList.Items.Add(Awnsers);
+                });
+            });
+
+            connection.On<char>("answerQuestion", (awnser) =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var newMessage = $"Het antwoord dat jij koos was {awnser}";
+                    messagesList.Items.Add(newMessage);
+                });
+            });
+
+            connection.On<bool>("result", (result) =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    if (result)
+                    {
+                        messagesList.Items.Add("Dat was het goede antwoord!");
+                    }
+                    else 
+                    {
+                        messagesList.Items.Add("Je hebt niet het goede antwoord gegeven");
+                    }
+                });
+            });
+
             try
             {
                 await connection.StartAsync();
@@ -92,8 +125,7 @@ namespace TestTool
         {
             try
             {
-                await connection.InvokeAsync("SendMessage",
-                    userTextBox.Text, messageTextBox.Text);
+                await connection.InvokeAsync("answerQuestion", messageTextBox.Text);
             }
             catch (Exception ex)
             {

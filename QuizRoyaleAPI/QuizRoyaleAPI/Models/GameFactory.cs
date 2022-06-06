@@ -1,4 +1,6 @@
-﻿using QuizRoyaleAPI.Services.Data;
+﻿using Microsoft.AspNetCore.SignalR;
+using QuizRoyaleAPI.Hubs;
+using QuizRoyaleAPI.Services.Data;
 
 namespace QuizRoyaleAPI.Models
 {
@@ -7,20 +9,11 @@ namespace QuizRoyaleAPI.Models
         public Game GetGame(int miliQuestionTime);
     }
 
-    public class GameFactory : IGameFactory
+    public class GameFactory
     {
-        private IQuestionService _QuestionService;
-        private IPlayerService _PlayerService;
-
-        public GameFactory(IQuestionService questionService, IPlayerService playerService) 
+        public static Game GetGame(int miliQuestionTime)
         {
-            this._QuestionService = questionService;
-            this._PlayerService = playerService;
-        }
-
-        public Game GetGame(int miliQuestionTime)
-        {
-            return new Game(miliQuestionTime, _QuestionService, _PlayerService);
+            return new Game(miliQuestionTime);
         }
     }
 }

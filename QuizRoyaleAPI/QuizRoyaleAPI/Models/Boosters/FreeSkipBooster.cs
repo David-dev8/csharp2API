@@ -2,9 +2,9 @@
 {
     public class FreeSkipBooster : Booster
     {
-        public void use(Game game)
+        public void use(Game game, string options)
         {
-
+            game.AnswerQuestion('*', options);
         }
     }
 }

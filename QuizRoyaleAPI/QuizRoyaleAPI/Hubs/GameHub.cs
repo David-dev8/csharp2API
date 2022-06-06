@@ -9,85 +9,58 @@ namespace QuizRoyaleAPI.Hubs
 {
     public class GameHub : Hub
     {
-        private System.Timers.Timer _startDelayTimer;
-        private IGameFactory _gameFactory;
-
-        public GameHub(IGameFactory gameFactory)
-        {
-            _gameFactory = gameFactory;
-        }
 
         public async Task join(string username)
         {
             if (State.CurrentGame == null)
             {
-                State.CurrentGame = _gameFactory.GetGame(1000);
+                State.CurrentGame = GameFactory.GetGame(10000);
             }
 
             if (State.CurrentGame.CanJoin())
             {
-                State.CurrentGame.Join(username);
+                State.CurrentGame.Join(username, Context.ConnectionId);
 
                 // Stuurt alleen een melding naar de client die wil joinen
                 int playersLeft = State.CurrentGame._minimumPlayers - State.CurrentGame.GetAmountOfPlayers();
                 if (playersLeft > 0)
                 {
                     string message = "welkom, we wachten nog op " + playersLeft + " spelers";
-                    await Clients.Client(Context.ConnectionId).SendAsync("succes", message);
+                    await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message);
                 }
 
                 if (State.CurrentGame.CanStart())
                 {
                     string message = "het spel begint binnenkort";
-                    await Clients.Client(Context.ConnectionId).SendAsync("updatestatus", message);
-                    this.SetStartTimer();
+                    await Clients.All.SendAsync("updateStatus", message);
                 }
             }
             else 
             {
                 // Stuurt alleen een melding naar de client die wil joinen
-                await Clients.Client(Context.ConnectionId).SendAsync("failed", "je kan nu niet joinen");
+                await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "");
             }
         }
 
-        private void SetStartTimer()
-        {
-            if (_startDelayTimer != null)
-            {
-                // Reset de timer als en nieuwe deelnemer binnekomt
-                _startDelayTimer.Stop();
-                _startDelayTimer.Start();
-            }
-            else 
-            { 
-                // Create a timer with a variable interval.
-                _startDelayTimer = new System.Timers.Timer(5000);
-                // Hook up the Tick event for the timer. 
-                _startDelayTimer.Elapsed += this.start;
-                _startDelayTimer.AutoReset = false;
-                _startDelayTimer.Enabled = true;
-            }
-        }
-
-        private async void start(Object source, ElapsedEventArgs e)
-        {
-            State.CurrentGame.Start();
-            await Clients.All.SendAsync("start");
-        }
 
         public async Task leave()
         {
-            await Clients.All.SendAsync("leave");
+            await State.CurrentGame.EliminatePlayer(Context.ConnectionId);
         }
 
-        public async Task answerQuestion(int roomID, char AwnserID)
+        public async Task answerQuestion(char AwnserID)
         {
-            await Clients.All.SendAsync("answerQuestion");
+            State.CurrentGame.AnswerQuestion(AwnserID, Context.ConnectionId);
+            await Clients.Client(Context.ConnectionId).SendAsync("answerQuestion", AwnserID);
         }
 
-        public async Task useBoost(int roomID, string type)
+        public async Task useBoost(string type, string options)
         {
-            await Clients.All.SendAsync("useBoost");
+            if (options == "")
+            {
+                options = Context.ConnectionId;
+            }
+            State.CurrentGame.UseBoost(type, options);
         }
     }
 }
