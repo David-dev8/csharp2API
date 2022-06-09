@@ -26,7 +26,9 @@ namespace QuizRoyaleAPI.Hubs
                 if (playersLeft > 0)
                 {
                     string message = "welkom, we wachten nog op " + playersLeft + " spelers";
-                    await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message);
+                    string[] players = State.CurrentGame.GetPlayerNames(); 
+                    await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players);
+                    await Clients.All.SendAsync("newPlayerJoin", username);
                 }
 
                 if (State.CurrentGame.CanStart())
@@ -38,7 +40,7 @@ namespace QuizRoyaleAPI.Hubs
             else 
             {
                 // Stuurt alleen een melding naar de client die wil joinen
-                await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "");
+                await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] {});
             }
         }
 

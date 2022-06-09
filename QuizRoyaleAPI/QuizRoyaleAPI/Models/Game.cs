@@ -286,5 +286,17 @@ namespace QuizRoyaleAPI.Models
 
         }
 
+        public string[] GetPlayerNames()
+        {
+            string[] names = new string[] { };
+
+            foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
+            {
+                names.Append(player.Value.Username);
+            }
+
+            return names;
+        }
+
     }
 }
