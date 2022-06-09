@@ -21,7 +21,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
                 c.Name,
                 c.Color,
                 c.Picture
-            ));
+            )).ToList();
         }
 
         public QuestionDTO GetQuestionByCategoryId(int categoryId)
