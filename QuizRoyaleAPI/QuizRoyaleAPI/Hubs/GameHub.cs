@@ -2,6 +2,7 @@
 using System.Timers;
 using System.Web;
 using Microsoft.AspNetCore.SignalR;
+using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Models;
 using QuizRoyaleAPI.Services.Data;
 
@@ -12,6 +13,7 @@ namespace QuizRoyaleAPI.Hubs
 
         public async Task join(string username)
         {
+            Console.WriteLine(username + " wil Joinen");
             if (State.CurrentGame == null)
             {
                 State.CurrentGame = GameFactory.GetGame(10000);
@@ -26,9 +28,9 @@ namespace QuizRoyaleAPI.Hubs
                 if (playersLeft > 0)
                 {
                     string message = "welkom, we wachten nog op " + playersLeft + " spelers";
-                    string[] players = State.CurrentGame.GetPlayerNames(); 
+                    InGamePlayerDTO[] players = State.CurrentGame.GetPlayerNames(); 
                     await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players);
-                    await Clients.All.SendAsync("newPlayerJoin", username);
+                    await Clients.All.SendAsync("newPlayerJoin", State.CurrentGame.GetPlayerObj(username));
                 }
 
                 if (State.CurrentGame.CanStart())

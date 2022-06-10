@@ -24,7 +24,7 @@ builder.Services.AddDataServices();
 // JWT Tokens
 builder.Services.AddJWT(builder.Configuration.GetSection("Authentication:Key").Value);
 
-builder.WebHost.UseKestrel().UseIIS().UseIISIntegration().UseSetting("https_port", "5001").UseSetting("http_port", "5000");
+//builder.WebHost.UseKestrel().UseIIS().UseIISIntegration().UseSetting("https_port", "5001").UseSetting("http_port", "5000");
 
 var app = builder.Build();
 

@@ -113,7 +113,7 @@ namespace QuizRoyaleAPI.Models
         // Stuurt de volgende vraag
         public async Task SendNewQuestion(string catName)
         {
-            await State.GetHubContext().Clients.All.SendAsync("newQuestion", catName, this._currentQuestion.Content, this._currentQuestion.Possibilities);// Documented
+            await State.GetHubContext().Clients.All.SendAsync("newQuestion", this._currentQuestion);// Documented
         }
 
         // haalt de resultaten van de vorige vraag op om te sturen
@@ -286,17 +286,26 @@ namespace QuizRoyaleAPI.Models
 
         }
 
-        public string[] GetPlayerNames()
+        public InGamePlayerDTO[] GetPlayerNames()
         {
-            string[] names = new string[] { };
+            InGamePlayerDTO[] names = new InGamePlayerDTO[] { };
 
             foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
             {
-                names.Append(player.Value.Username);
+                names.Append(player.Value);
             }
 
             return names;
         }
 
+        public InGamePlayerDTO GetPlayerObj(string name)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
+                InGamePlayerDTO player = _PlayerService.GetPlayerInGame(name);
+                return player;
+            }
+        }
     }
 }
