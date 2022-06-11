@@ -180,12 +180,13 @@ namespace QuizRoyaleAPI.Models
         }
 
         // Registreerd een antwoord
-        public void AnswerQuestion(char id, string conectionId)
+        public async Task AnswerQuestion(char id, string conectionId)
         {
             InGamePlayerDTO player = this._allPlayers[conectionId];
             if (!this._allResponses.ContainsKey(player))
             { 
                 this._allResponses.Add(player, id);
+                await State.GetHubContext().Clients.All.SendAsync("playerAwnsered", player);
             }
         }
 
@@ -306,6 +307,11 @@ namespace QuizRoyaleAPI.Models
                 InGamePlayerDTO player = _PlayerService.GetPlayerInGame(name);
                 return player;
             }
+        }
+
+        public IDictionary<CategoryDTO, float> getCategories()
+        {
+            return this._categories;
         }
     }
 }
