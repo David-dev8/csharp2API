@@ -91,7 +91,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
                     i.ItemType,
                     i.PaymentType,
                     i.Cost, i.Description);
-            });
+            }).ToList();
         }
     }
 }

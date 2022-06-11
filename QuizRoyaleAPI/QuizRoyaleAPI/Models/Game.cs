@@ -22,8 +22,6 @@ namespace QuizRoyaleAPI.Models
         private int _questionTimeInMili;
         private bool _inProgress;
 
-        private IServiceProvider serviceProvider;
-
         public Game(int questionTimeInMili)
         {
             this._currentQuestion = null;
@@ -34,9 +32,7 @@ namespace QuizRoyaleAPI.Models
             this._questionTimeInMili = questionTimeInMili;
             this._inProgress = false;
 
-            this.serviceProvider = State.ServiceProvider;
-
-            using (var scope = serviceProvider.CreateScope())
+            using (var scope = State.ServiceProvider.CreateScope())
             {
                 var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
                 IEnumerable<CategoryDTO> categories = _QuestionService.GetCategories();
@@ -98,7 +94,7 @@ namespace QuizRoyaleAPI.Models
 
                 if (randomInt <= counter)
                 {
-                    using (var scope = serviceProvider.CreateScope())
+                    using (var scope = State.ServiceProvider.CreateScope())
                     {
                         var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
                         this._currentQuestion = _QuestionService.GetQuestionByCategoryId(cat.Id); // Get random element from array
@@ -237,7 +233,7 @@ namespace QuizRoyaleAPI.Models
         // Laat een speler Joinen
         public void Join(string name, string conectionId)
         {
-            using (var scope = serviceProvider.CreateScope())
+            using (var scope = State.ServiceProvider.CreateScope())
             {
                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
                 InGamePlayerDTO player = _PlayerService.GetPlayerInGame(name);
@@ -301,7 +297,7 @@ namespace QuizRoyaleAPI.Models
 
         public InGamePlayerDTO GetPlayerObj(string name)
         {
-            using (var scope = serviceProvider.CreateScope())
+            using (var scope = State.ServiceProvider.CreateScope())
             {
                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
                 InGamePlayerDTO player = _PlayerService.GetPlayerInGame(name);
@@ -309,9 +305,14 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
-        public IDictionary<CategoryDTO, float> getCategories()
+        public IList<MasteryDTO> getCategories()
         {
-            return this._categories;
+            IList<MasteryDTO> list = new List<MasteryDTO>();
+            foreach (KeyValuePair<CategoryDTO, float> cat in this._categories)
+            {
+                list.Add(new MasteryDTO(cat.Key, cat.Value));
+            }
+            return list;
         }
     }
 }

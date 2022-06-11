@@ -29,9 +29,10 @@ namespace QuizRoyaleAPI.Hubs
                 {
                     string message = "welkom, we wachten nog op " + playersLeft + " spelers";
                     InGamePlayerDTO[] players = State.CurrentGame.GetPlayerNames();
-                    IDictionary<CategoryDTO, float> categories = State.CurrentGame.getCategories();
-                    await Clients.All.SendAsync("newPlayerJoin", State.CurrentGame.GetPlayerObj(username));
+                    InGamePlayerDTO player = State.CurrentGame.GetPlayerObj(username);
+                    IList<MasteryDTO> categories = State.CurrentGame.getCategories();
                     await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
+                    await Clients.All.SendAsync("newPlayerJoin", player);
                 }
 
                 if (State.CurrentGame.CanStart())
@@ -43,7 +44,7 @@ namespace QuizRoyaleAPI.Hubs
             else 
             {
                 // Stuurt alleen een melding naar de client die wil joinen
-                await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new Dictionary<CategoryDTO, float>()) ;
+                await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<MasteryDTO>()) ;
             }
         }
 
