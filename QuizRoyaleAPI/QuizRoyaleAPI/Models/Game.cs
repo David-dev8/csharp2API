@@ -15,7 +15,7 @@ namespace QuizRoyaleAPI.Models
         private System.Timers.Timer _startDelayTimer;
         private System.Timers.Timer _coolDownTimer;
         public int _minimumPlayers { get; } = 11;
-        public int _maximumPlayers { get; } = 200;
+        public int _maximumPlayers { get; } = 2000;
         public IDictionary<CategoryDTO, float> _categories { get; set; }
         private BoosterFactory _boosterFactory;
         private int _questionTimeInMili;
@@ -176,6 +176,8 @@ namespace QuizRoyaleAPI.Models
             {
                 this.EndWin(this._allPlayers.First().Value.Username);
             }
+
+            State.GetHubContext().Clients.All.SendAsync("playersLeft", this._allPlayers.Values); // Doucumented
         }
 
         // Als alle spelers af zijn is er geen winner en is de game voorbij
@@ -189,7 +191,7 @@ namespace QuizRoyaleAPI.Models
         // Als er maar 1 speler over is dan wint deze speler
         public async Task EndWin(string winnerName)
         {
-            await State.GetHubContext().Clients.All.SendAsync("Win", winnerName);// Documented
+            await State.GetHubContext().Clients.All.SendAsync("Win");// Documented
             State.CurrentGame = null;
             RemoveTimers();
             Console.WriteLine("winnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnn");
