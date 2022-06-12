@@ -13,8 +13,9 @@ namespace QuizRoyaleAPI.Models
         private IDictionary<InGamePlayerDTO, char> _allResponses;
         public System.Timers.Timer _timer { get; set; }
         private System.Timers.Timer _startDelayTimer;
-        public int _minimumPlayers { get; } = 2;
-        public int _maximumPlayers { get; } = 6;
+        private System.Timers.Timer _coolDownTimer;
+        public int _minimumPlayers { get; } = 11;
+        public int _maximumPlayers { get; } = 200;
         public IDictionary<CategoryDTO, float> _categories { get; set; }
         private BoosterFactory _boosterFactory;
         private int _questionTimeInMili;
@@ -60,11 +61,11 @@ namespace QuizRoyaleAPI.Models
             if (State.CurrentGame != null)
             {
                 // Create a timer with a variable interval.
-                _timer = new System.Timers.Timer(10000); // 10 seconden
-                                                         // Hook up the Tick event for the timer. 
-                _timer.Elapsed += this.StartNextQuestion;
-                _timer.AutoReset = false;
-                _timer.Enabled = true;
+                _coolDownTimer = new System.Timers.Timer(10000); // 10 seconden
+                                                                 // Hook up the Tick event for the timer. 
+                _coolDownTimer.Elapsed += this.StartNextQuestion;
+                _coolDownTimer.AutoReset = false;
+                _coolDownTimer.Enabled = true;
             }
         }
 
@@ -117,6 +118,7 @@ namespace QuizRoyaleAPI.Models
         public async Task SendNewQuestion()
         {
             await State.GetHubContext().Clients.All.SendAsync("newQuestion", _currentQuestion);// Documented
+            Console.WriteLine("----------------> " + _currentQuestion.RightAnswer + " is het goede antwoord <-----------------");
         }
 
         // haalt de resultaten van de vorige vraag op om te sturen
@@ -124,6 +126,7 @@ namespace QuizRoyaleAPI.Models
         {
             if (this._allResponses.Count > 0)
             {
+                IList<string> playersToEliminate = new List<string>();
                 foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
                 {
                     if (this._allResponses.ContainsKey(player.Value))
@@ -131,25 +134,37 @@ namespace QuizRoyaleAPI.Models
                         if (this._allResponses[player.Value] == this._currentQuestion.RightAnswer || this._allResponses[player.Value] == '*')
                         {
                             this.SendResultToPlayer(player.Key, true);
+                            Console.WriteLine(player.Value.Username + " heeft het goed!");
                         }
                         else
                         {
                             this.SendResultToPlayer(player.Key, false);
-                            this.EliminatePlayer(player.Key);
+                            playersToEliminate.Add(player.Key);
+                            Console.WriteLine(player.Value.Username + " heeft het fout!");
+                            //this.EliminatePlayer(player.Key);
                         }
                     }
                     else
                     {
                         this.SendResultToPlayer(player.Key, false);
-                        this.EliminatePlayer(player.Key);
+                        Console.WriteLine(player.Value.Username + " heeft niet geantwoord!");
+                        playersToEliminate.Add(player.Key);
+                        //this.EliminatePlayer(player.Key);
                     }
                 }
+                Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn voor de purge");
+                foreach (string id in playersToEliminate)
+                { 
+                    this.EliminatePlayer(id);
+                }
+                Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn naa de purge");
             }
             else 
             {
                 foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
                 {
                     this.EliminatePlayer(player.Key);
+                    Console.WriteLine("niemand heeft geantwoord");
                 }
             }
 
@@ -218,10 +233,6 @@ namespace QuizRoyaleAPI.Models
         public async Task EliminatePlayer(string playerID)
         {
             this._allPlayers.Remove(playerID);
-            if (this._allPlayers.Count == 0)
-            {
-                this.EndTie();
-            }
             await State.GetHubContext().Clients.Client(playerID).SendAsync("gameOver"); // Doucumented
         }
 

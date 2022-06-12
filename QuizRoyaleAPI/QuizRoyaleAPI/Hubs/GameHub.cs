@@ -65,6 +65,7 @@ namespace QuizRoyaleAPI.Hubs
 
         public async Task answerQuestion(char AwnserID)
         {
+            Console.WriteLine(Context.ConnectionId + " wil " + AwnserID + " antwoorden!");
             State.CurrentGame.AnswerQuestion(AwnserID, Context.ConnectionId);
             await Clients.Client(Context.ConnectionId).SendAsync("answerQuestion", AwnserID);
         }

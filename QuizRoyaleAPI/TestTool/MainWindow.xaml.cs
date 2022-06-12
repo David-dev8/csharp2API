@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,7 @@ namespace TestTool
     public partial class MainWindow : Window
     {
         HubConnection connection;
+        IList<massClient> holder;
         public MainWindow()
         {
             InitializeComponent();
@@ -147,10 +149,13 @@ namespace TestTool
 
         private async void joinButton_Copy_Click(object sender, RoutedEventArgs e)
         {
+            holder = new List<massClient>();
             for (int i = 0; i < 11; i++)
             {
                 massClient mockClient = new massClient();
                 await mockClient.join(i.ToString());
+                holder.Add(mockClient);
+                Thread.Sleep(100);
             }
         }
     }
