@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.DataAccess
@@ -25,6 +26,17 @@ namespace QuizRoyaleAPI.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Item>(i =>
+            {
+                i.Property(i => i.ItemType).HasConversion(new EnumToStringConverter<ItemType>());
+                i.Property(i => i.PaymentType).HasConversion(new EnumToStringConverter<PaymentType>());
+            });
+
+            modelBuilder.Entity<Result>(r =>
+            {
+                r.Property(r => r.Mode).HasConversion(new EnumToStringConverter<Mode>());
+            });
+
             modelBuilder.Entity<AcquiredItem>(entity =>
             {
                 entity.HasKey(ai => new { ai.ItemId, ai.PlayerId });
