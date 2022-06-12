@@ -13,10 +13,8 @@ namespace QuizRoyaleAPI.Models
         private IDictionary<InGamePlayerDTO, char> _allResponses;
         public System.Timers.Timer _timer { get; set; }
         private System.Timers.Timer _startDelayTimer;
-        public int _minimumPlayers { get; } = 4;
+        public int _minimumPlayers { get; } = 2;
         public int _maximumPlayers { get; } = 6;
-        private event EventHandler _questionEnded;
-        private event EventHandler _playerWon;
         public IDictionary<CategoryDTO, float> _categories { get; set; }
         private BoosterFactory _boosterFactory;
         private int _questionTimeInMili;
@@ -130,7 +128,6 @@ namespace QuizRoyaleAPI.Models
                         else
                         {
                             this.SendResultToPlayer(player.Key, false);
-                            Console.WriteLine("er gaat iemand dood");
                             this.EliminatePlayer(player.Key);
                         }
                     }

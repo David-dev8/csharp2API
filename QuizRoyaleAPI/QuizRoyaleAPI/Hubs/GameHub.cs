@@ -29,18 +29,18 @@ namespace QuizRoyaleAPI.Hubs
                     int playersLeft = State.CurrentGame._minimumPlayers - State.CurrentGame.GetAmountOfPlayers();
                     if (playersLeft > 0)
                     {
-                        string message = "welkom, we wachten nog op " + playersLeft + " spelers";
+                        string message = "Welkom, we wachten nog op " + playersLeft + " spelers";
                         IList<InGamePlayerDTO> players = State.CurrentGame.GetPlayerNames();
                         IList<MasteryDTO> categories = State.CurrentGame.getCategories();
                         await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
                     }
 
                     InGamePlayerDTO player = State.CurrentGame.GetPlayerObj(username);
-                    await Clients.Others.SendAsync("newPlayerJoin", player, "we wachten nog op " + playersLeft + " spelers");
+                    await Clients.Others.SendAsync("newPlayerJoin", player, "We wachten nog op " + playersLeft + " spelers");
 
                     if (State.CurrentGame.CanStart())
                     {
-                        string message = "het spel begint binnenkort";
+                        string message = "Het spel begint binnenkort";
                         await Clients.All.SendAsync("updateStatus", message);
                     }
                 }
