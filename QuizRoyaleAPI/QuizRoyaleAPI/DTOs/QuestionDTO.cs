@@ -8,6 +8,8 @@
 
         public IEnumerable<AnswerDTO> Possibilities { get; set; }
 
+        public CategoryDTO? Category { get; set; }
+
         public QuestionDTO(string content, char rightAnswer, IEnumerable<AnswerDTO> possibilities)
         {
             Content = content;

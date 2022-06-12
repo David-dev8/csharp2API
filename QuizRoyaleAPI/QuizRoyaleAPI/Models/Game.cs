@@ -45,21 +45,27 @@ namespace QuizRoyaleAPI.Models
         public void SetTimer(int questionTime)
         {
             // Create a timer with a variable interval.
-            _timer = new System.Timers.Timer(questionTime);
-            // Hook up the Tick event for the timer. 
-            _timer.Elapsed += this.NextQuestion;
-            _timer.AutoReset = false;
-            _timer.Enabled = true;
+            if(State.CurrentGame != null)
+            {
+                _timer = new System.Timers.Timer(questionTime);
+                // Hook up the Tick event for the timer. 
+                _timer.Elapsed += this.NextQuestion;
+                _timer.AutoReset = false;
+                _timer.Enabled = true;
+            }
         }
 
         private void SetCooldownTimer() 
         {
-            // Create a timer with a variable interval.
-            _timer = new System.Timers.Timer(10000); // 10 seconden
-            // Hook up the Tick event for the timer. 
-            _timer.Elapsed += this.StartNextQuestion;
-            _timer.AutoReset = false;
-            _timer.Enabled = true;
+            if (State.CurrentGame != null)
+            {
+                // Create a timer with a variable interval.
+                _timer = new System.Timers.Timer(10000); // 10 seconden
+                                                         // Hook up the Tick event for the timer. 
+                _timer.Elapsed += this.StartNextQuestion;
+                _timer.AutoReset = false;
+                _timer.Enabled = true;
+            }
         }
 
         //start de timer voor de volgende vraag weer op
@@ -76,7 +82,7 @@ namespace QuizRoyaleAPI.Models
         }
 
         // Haalt en stuurt de volgende vraag op
-        private void NextQuestion(Object source, ElapsedEventArgs e)
+        private void NextQuestion(object? source, ElapsedEventArgs e)
         {
             if (this._currentQuestion != null)
             {
@@ -98,7 +104,8 @@ namespace QuizRoyaleAPI.Models
                     {
                         var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
                         this._currentQuestion = _QuestionService.GetQuestionByCategoryId(cat.Id); // Get random element from array
-                        this.SendNewQuestion(cat.Name);
+                        _currentQuestion.Category = cat;
+                        this.SendNewQuestion();
                         this.SetCooldownTimer();
                         break;
                     }
@@ -107,9 +114,9 @@ namespace QuizRoyaleAPI.Models
         }
 
         // Stuurt de volgende vraag
-        public async Task SendNewQuestion(string catName)
+        public async Task SendNewQuestion()
         {
-            await State.GetHubContext().Clients.All.SendAsync("newQuestion", this._currentQuestion);// Documented
+            await State.GetHubContext().Clients.All.SendAsync("newQuestion", _currentQuestion);// Documented
         }
 
         // haalt de resultaten van de vorige vraag op om te sturen
@@ -160,6 +167,8 @@ namespace QuizRoyaleAPI.Models
         public async Task EndTie()
         { 
             State.CurrentGame = null;
+            RemoveTimers();
+            Console.WriteLine("gelijkspelgelijkspelgelijkspelgelijkspelgelijkspelgelijkspel");
         }
 
         // Als er maar 1 speler over is dan wint deze speler
@@ -167,6 +176,19 @@ namespace QuizRoyaleAPI.Models
         {
             await State.GetHubContext().Clients.All.SendAsync("Win", winnerName);// Documented
             State.CurrentGame = null;
+            RemoveTimers();
+            Console.WriteLine("winnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnn");
+        }
+
+        private void RemoveTimers()
+        {
+            _timer.Elapsed -= NextQuestion;
+            _timer.Elapsed -= StartNextQuestion;
+            _startDelayTimer.Elapsed -= startGame;
+            _timer.Stop();
+            _startDelayTimer.Stop();
+            _timer.Dispose();
+            _startDelayTimer.Dispose();
         }
 
         // Stuurt de resultaat van de vorige vraag 
@@ -219,7 +241,7 @@ namespace QuizRoyaleAPI.Models
             if (this.CanStart())
             {
                 await State.GetHubContext().Clients.All.SendAsync("start"); // Documented
-                this.SetTimer(this._questionTimeInMili);
+                this.SetTimer(10);
                 this._inProgress = true;
             }
         }

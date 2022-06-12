@@ -3,12 +3,12 @@
     public class MasteryDTO
     {
         public CategoryDTO Category { get; set; }
-        public double SuccessRate { get; set; }
+        public double Mastery { get; set; }
 
-        public MasteryDTO(CategoryDTO category, double successRate)
+        public MasteryDTO(CategoryDTO category, double mastery)
         {
             Category = category;
-            SuccessRate = successRate;
+            Mastery = mastery;
         }
     }
 }

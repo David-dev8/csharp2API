@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\Images\coding.svg" />
+    <Content Remove="wwwroot\Images\food.png" />
+    <Content Remove="wwwroot\Images\food.svg" />
+    <Content Remove="wwwroot\Images\geography.svg" />
+    <Content Remove="wwwroot\Images\movies.svg" />
+    <Content Remove="wwwroot\Images\nature.svg" />
+    <Content Remove="wwwroot\Images\science.svg" />
+    <Content Remove="wwwroot\Images\sports.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.5" />
@@ -20,7 +31,17 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="wwwroot\Images\coding.svg" />
+    <Resource Include="wwwroot\Images\food.png" />
+    <Resource Include="wwwroot\Images\food.svg" />
+    <Resource Include="wwwroot\Images\geography.svg" />
+    <Resource Include="wwwroot\Images\movies.svg" />
+    <Resource Include="wwwroot\Images\nature.svg" />
+    <Resource Include="wwwroot\Images\science.svg" />
+    <Resource Include="wwwroot\Images\sports.svg" />
   </ItemGroup>
 
 </Project>
