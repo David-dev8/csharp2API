@@ -24,6 +24,7 @@ namespace QuizRoyaleAPI.Models
         private const int QUESTION_XP = 75;
         private const int WIN_COINS = 200;
         private const int QUESTION_COINS = 25;
+        private int _miliStarted;
 
         public Game(int questionTimeInMili)
         {
@@ -57,6 +58,7 @@ namespace QuizRoyaleAPI.Models
                 _timer.Elapsed += this.NextQuestion;
                 _timer.AutoReset = false;
                 _timer.Enabled = true;
+                _miliStarted = DateTime.Now.Millisecond;
             }
         }
 
@@ -140,9 +142,9 @@ namespace QuizRoyaleAPI.Models
                             using (var scope = State.ServiceProvider.CreateScope())
                             {
                                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
-                                _PlayerService.GiveRewards(player.Value.Username, WIN_XP, WIN_COINS);
+                                _PlayerService.GiveRewards(player.Value.Username, QUESTION_XP, QUESTION_COINS);
                             }
-                            this.SendResultToPlayer(player.Key, true, QUESTION_XP, WIN_COINS);
+                            this.SendResultToPlayer(player.Key, true, QUESTION_XP, QUESTION_COINS);
                             Console.WriteLine(player.Value.Username + " heeft het goed!");
                         }
                         else
@@ -237,7 +239,7 @@ namespace QuizRoyaleAPI.Models
             if (!this._allResponses.ContainsKey(player))
             { 
                 this._allResponses.Add(player, id);
-                await State.GetHubContext().Clients.All.SendAsync("playerAwnsered", player);
+                await State.GetHubContext().Clients.All.SendAsync("playerAwnsered", player, (DateTime.Now.Millisecond - _miliStarted) / 1000.0);
             }
         }
 
