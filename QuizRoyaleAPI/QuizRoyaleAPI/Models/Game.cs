@@ -80,8 +80,10 @@ namespace QuizRoyaleAPI.Models
         // Haalt en stuurt de volgende vraag op
         private void NextQuestion(Object source, ElapsedEventArgs e)
         {
-
-            this.SendResultsFromLastQuestion();
+            if (this._currentQuestion != null)
+            {
+                this.SendResultsFromLastQuestion();
+            }
 
             Random rnd = new Random();
             int randomInt = rnd.Next(100);
