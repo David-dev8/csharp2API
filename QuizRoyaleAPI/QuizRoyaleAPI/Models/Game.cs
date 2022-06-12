@@ -179,6 +179,8 @@ namespace QuizRoyaleAPI.Models
                 }
             }
 
+            State.GetHubContext().Clients.All.SendAsync("playersLeft", this._allPlayers.Values); // Doucumented
+
             if (this._allPlayers.Count == 0)
             {
                 this.EndTie();
@@ -187,8 +189,6 @@ namespace QuizRoyaleAPI.Models
             {
                 this.EndWin(this._allPlayers.First().Value.Username);
             }
-
-            State.GetHubContext().Clients.All.SendAsync("playersLeft", this._allPlayers.Values); // Doucumented
         }
 
         // Als alle spelers af zijn is er geen winner en is de game voorbij
@@ -209,7 +209,7 @@ namespace QuizRoyaleAPI.Models
                 _PlayerService.GiveWin(winnerName);
             }
 
-                await State.GetHubContext().Clients.All.SendAsync("Win", WIN_XP, WIN_COINS);// Documented
+            await State.GetHubContext().Clients.All.SendAsync("Win", WIN_XP, WIN_COINS);// Documented
             State.CurrentGame = null;
             RemoveTimers();
             Console.WriteLine("winnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnn");
@@ -232,7 +232,7 @@ namespace QuizRoyaleAPI.Models
             await State.GetHubContext().Clients.Client(conectionId).SendAsync("result", result, xp, coins); // Documented
         }
 
-        // Registreerd een antwoord
+        // Registreert een antwoord
         public async Task AnswerQuestion(char id, string conectionId)
         {
             InGamePlayerDTO player = this._allPlayers[conectionId];
