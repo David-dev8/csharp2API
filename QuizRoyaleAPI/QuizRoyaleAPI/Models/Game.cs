@@ -197,6 +197,10 @@ namespace QuizRoyaleAPI.Models
         public async Task EliminatePlayer(string playerID)
         {
             this._allPlayers.Remove(playerID);
+            if (this._allPlayers.Count == 0)
+            {
+                this.EndTie();
+            }
             await State.GetHubContext().Clients.Client(playerID).SendAsync("gameOver"); // Doucumented
         }
 

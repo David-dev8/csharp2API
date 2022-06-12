@@ -21,25 +21,33 @@ namespace QuizRoyaleAPI.Hubs
 
             if (State.CurrentGame.CanJoin())
             {
-                State.CurrentGame.Join(username, Context.ConnectionId);
-
-                // Stuurt alleen een melding naar de client die wil joinen
-                int playersLeft = State.CurrentGame._minimumPlayers - State.CurrentGame.GetAmountOfPlayers();
-                if (playersLeft > 0)
+                try
                 {
-                    string message = "welkom, we wachten nog op " + playersLeft + " spelers";
-                    IList<InGamePlayerDTO> players = State.CurrentGame.GetPlayerNames();
-                    IList<MasteryDTO> categories = State.CurrentGame.getCategories();
-                    await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
+                    State.CurrentGame.Join(username, Context.ConnectionId);
+
+                    // Stuurt alleen een melding naar de client die wil joinen
+                    int playersLeft = State.CurrentGame._minimumPlayers - State.CurrentGame.GetAmountOfPlayers();
+                    if (playersLeft > 0)
+                    {
+                        string message = "welkom, we wachten nog op " + playersLeft + " spelers";
+                        IList<InGamePlayerDTO> players = State.CurrentGame.GetPlayerNames();
+                        IList<MasteryDTO> categories = State.CurrentGame.getCategories();
+                        await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
+                    }
+
+                    InGamePlayerDTO player = State.CurrentGame.GetPlayerObj(username);
+                    await Clients.Others.SendAsync("newPlayerJoin", player, "we wachten nog op " + playersLeft + " spelers");
+
+                    if (State.CurrentGame.CanStart())
+                    {
+                        string message = "het spel begint binnenkort";
+                        await Clients.All.SendAsync("updateStatus", message);
+                    }
                 }
-
-                InGamePlayerDTO player = State.CurrentGame.GetPlayerObj(username);
-                await Clients.Others.SendAsync("newPlayerJoin", player, "we wachten nog op " + playersLeft + " spelers");
-
-                if (State.CurrentGame.CanStart())
+                catch 
                 {
-                    string message = "het spel begint binnenkort";
-                    await Clients.All.SendAsync("updateStatus", message);
+                    // Stuurt alleen een melding naar de client die wil joinen
+                    await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<MasteryDTO>());
                 }
             }
             else 
