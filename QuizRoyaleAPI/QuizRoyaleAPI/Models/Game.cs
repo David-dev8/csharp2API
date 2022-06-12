@@ -20,6 +20,10 @@ namespace QuizRoyaleAPI.Models
         private BoosterFactory _boosterFactory;
         private int _questionTimeInMili;
         private bool _inProgress;
+        private const int WIN_XP = 500;
+        private const int QUESTION_XP = 75;
+        private const int WIN_COINS = 200;
+        private const int QUESTION_COINS = 25;
 
         public Game(int questionTimeInMili)
         {
@@ -133,12 +137,17 @@ namespace QuizRoyaleAPI.Models
                     {
                         if (this._allResponses[player.Value] == this._currentQuestion.RightAnswer || this._allResponses[player.Value] == '*')
                         {
-                            this.SendResultToPlayer(player.Key, true);
+                            using (var scope = State.ServiceProvider.CreateScope())
+                            {
+                                var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
+                                _PlayerService.GiveRewards(player.Value.Username, WIN_XP, WIN_COINS);
+                            }
+                            this.SendResultToPlayer(player.Key, true, QUESTION_XP, WIN_COINS);
                             Console.WriteLine(player.Value.Username + " heeft het goed!");
                         }
                         else
                         {
-                            this.SendResultToPlayer(player.Key, false);
+                            this.SendResultToPlayer(player.Key, false, 0, 0);
                             playersToEliminate.Add(player.Key);
                             Console.WriteLine(player.Value.Username + " heeft het fout!");
                             //this.EliminatePlayer(player.Key);
@@ -146,7 +155,7 @@ namespace QuizRoyaleAPI.Models
                     }
                     else
                     {
-                        this.SendResultToPlayer(player.Key, false);
+                        this.SendResultToPlayer(player.Key, false, 0, 0);
                         Console.WriteLine(player.Value.Username + " heeft niet geantwoord!");
                         playersToEliminate.Add(player.Key);
                         //this.EliminatePlayer(player.Key);
@@ -191,7 +200,13 @@ namespace QuizRoyaleAPI.Models
         // Als er maar 1 speler over is dan wint deze speler
         public async Task EndWin(string winnerName)
         {
-            await State.GetHubContext().Clients.All.SendAsync("Win");// Documented
+            using (var scope = State.ServiceProvider.CreateScope())
+            {
+                var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
+                _PlayerService.GiveRewards(winnerName, WIN_XP, WIN_COINS);
+            }
+
+                await State.GetHubContext().Clients.All.SendAsync("Win", WIN_XP, WIN_COINS);// Documented
             State.CurrentGame = null;
             RemoveTimers();
             Console.WriteLine("winnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnn");
@@ -209,9 +224,9 @@ namespace QuizRoyaleAPI.Models
         }
 
         // Stuurt de resultaat van de vorige vraag 
-        private async Task SendResultToPlayer(string conectionId, bool result)
+        private async Task SendResultToPlayer(string conectionId, bool result, int xp, int coins)
         {
-            await State.GetHubContext().Clients.Client(conectionId).SendAsync("result", result); // Documented
+            await State.GetHubContext().Clients.Client(conectionId).SendAsync("result", result, xp, coins); // Documented
         }
 
         // Registreerd een antwoord

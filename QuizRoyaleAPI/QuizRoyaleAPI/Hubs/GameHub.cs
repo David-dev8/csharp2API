@@ -67,7 +67,6 @@ namespace QuizRoyaleAPI.Hubs
         {
             Console.WriteLine(Context.ConnectionId + " wil " + AwnserID + " antwoorden!");
             State.CurrentGame.AnswerQuestion(AwnserID, Context.ConnectionId);
-            await Clients.Client(Context.ConnectionId).SendAsync("answerQuestion", AwnserID);
         }
 
         public async Task useBoost(string type, string options)

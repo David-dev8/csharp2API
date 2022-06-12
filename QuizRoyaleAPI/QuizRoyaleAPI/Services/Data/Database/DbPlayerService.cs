@@ -14,6 +14,13 @@ namespace QuizRoyaleAPI.Services.Data.Database
             _context = context;
         }
 
+        public void GiveRewards(string username, int xp, int coins)
+        {
+            Player? player = _context.Players.Where(p => p.Username == username).FirstOrDefault();
+            player.XP += xp;
+            player.Coins += coins;
+        }
+
         public int CreatePlayer(string username)
         {
             var player = new Player(username);

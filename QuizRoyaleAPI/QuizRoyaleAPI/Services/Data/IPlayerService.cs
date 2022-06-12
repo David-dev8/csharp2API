@@ -6,6 +6,8 @@ namespace QuizRoyaleAPI.Services.Data
     {
         public PlayerDetailsDTO GetPlayer(int userId);
 
+        public void GiveRewards(string username, int xp, int coins);
+
         public int CreatePlayer(string username);
 
         public void DeletePlayer(int userId);
