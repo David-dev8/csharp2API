@@ -19,6 +19,7 @@
         <Label Content="User" HorizontalAlignment="Left" Height="31" Margin="39,63,0,0" VerticalAlignment="Top" Width="38"/>
         <Label Content="Message" HorizontalAlignment="Left" Height="26" Margin="19,120,0,0" VerticalAlignment="Top" Width="58"/>
         <Button x:Name="joinButton" Content="Join game" HorizontalAlignment="Left" Margin="476,145,0,0" VerticalAlignment="Top" Width="95" Click="joinButton_Click" Height="41" Grid.Column="1" />
+        <Button x:Name="joinButton_Copy" Content="Mass populate game" HorizontalAlignment="Left" Margin="476,403,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_Copy_Click" Height="79" Grid.Column="1" />
 
     </Grid>
 </Window>
