@@ -204,6 +204,7 @@ namespace QuizRoyaleAPI.Models
             {
                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
                 _PlayerService.GiveRewards(winnerName, WIN_XP, WIN_COINS);
+                _PlayerService.GiveWin(winnerName);
             }
 
                 await State.GetHubContext().Clients.All.SendAsync("Win", WIN_XP, WIN_COINS);// Documented

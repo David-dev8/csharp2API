@@ -8,6 +8,8 @@ namespace QuizRoyaleAPI.Services.Data
 
         public void GiveRewards(string username, int xp, int coins);
 
+        public void GiveWin(string username);
+
         public int CreatePlayer(string username);
 
         public void DeletePlayer(int userId);
