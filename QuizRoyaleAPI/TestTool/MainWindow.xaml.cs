@@ -144,5 +144,14 @@ namespace TestTool
                 messagesList.Items.Add(ex.Message);
             }
         }
+
+        private async void joinButton_Copy_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                massClient mockClient = new massClient();
+                await mockClient.join(i.ToString());
+            }
+        }
     }
 }
