@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuizRoyaleAPI.DataAccess;
 
@@ -10,9 +11,10 @@ using QuizRoyaleAPI.DataAccess;
 namespace QuizRoyaleAPI.Migrations
 {
     [DbContext(typeof(QuizRoyaleDbContext))]
-    partial class QuizRoyaleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220613123134_AddedTimeForResult")]
+    partial class AddedTimeForResult
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -308,6 +310,9 @@ namespace QuizRoyaleAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RightAnswers")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Time")

@@ -28,7 +28,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
                     Division = d,
                     Rank = r
                 }
-            ).Where(d => d.Division.UpperBound > position).OrderBy(d => d.Division.UpperBound).Single();
+            ).Where(d => d.Division.UpperBound >= position).OrderBy(d => d.Division.UpperBound).First();
 
             return new DivisionDTO(
                 division.Rank.Name,
@@ -61,9 +61,9 @@ namespace QuizRoyaleAPI.Services.Data.Database
 
         public IEnumerable<ResultDTO> GetResults(int userId)
         {
-            return GetPlayer(userId).Results.Select(r => new ResultDTO(
+            return GetPlayer(userId).Results.OrderByDescending(r => r.Time).Select(r => new ResultDTO(
                 r.Mode,
-                r.RightAnswers,
+                r.Time,
                 r.Position
             ));
         }
@@ -95,8 +95,15 @@ namespace QuizRoyaleAPI.Services.Data.Database
 
         private int GetPlayerPosition(int userId)
         {
-            int position = _context.Players.OrderBy(p => p.AmountOfWins).ToList().FindIndex((p) => p.Id == userId);
-            return (int)((double)100 * position / _context.Players.Count());
+            if(GetPlayer(userId).AmountOfWins == 0)
+            {
+                return 100;
+            } 
+            else
+            {
+                int position = _context.Players.OrderBy(p => p.AmountOfWins).ToList().FindIndex((p) => p.Id == userId);
+                return (int)((double)100 * position / _context.Players.Count());
+            }
         }
 
         private bool CanBeRewarded(Badge badge, Player player)

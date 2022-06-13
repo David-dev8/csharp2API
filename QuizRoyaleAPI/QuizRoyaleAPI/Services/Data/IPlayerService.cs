@@ -1,4 +1,5 @@
 ﻿using QuizRoyaleAPI.DTOs;
+using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.Services.Data
 {
@@ -9,6 +10,8 @@ namespace QuizRoyaleAPI.Services.Data
         public void GiveRewards(string username, int xp, int coins);
 
         public void GiveWin(string username);
+
+        public void RegisterResult(string username, Mode mode, int position);
 
         public int CreatePlayer(string username);
 

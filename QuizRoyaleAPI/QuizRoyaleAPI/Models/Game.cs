@@ -130,54 +130,48 @@ namespace QuizRoyaleAPI.Models
         // haalt de resultaten van de vorige vraag op om te sturen
         private void SendResultsFromLastQuestion()
         {
+            ICollection<string> playersToEliminate = new List<string>();
             if (this._allResponses.Count > 0)
             {
-                IList<string> playersToEliminate = new List<string>();
                 foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
                 {
-                    if (this._allResponses.ContainsKey(player.Value))
-                    {
-                        if (this._allResponses[player.Value] == this._currentQuestion.RightAnswer || this._allResponses[player.Value] == '*')
+                    if (_allResponses.ContainsKey(player.Value)
+                        && (_allResponses[player.Value] == this._currentQuestion.RightAnswer || this._allResponses[player.Value] == '*'))
+                    { 
+                        using (var scope = State.ServiceProvider.CreateScope())
                         {
-                            using (var scope = State.ServiceProvider.CreateScope())
-                            {
-                                var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
-                                _PlayerService.GiveRewards(player.Value.Username, QUESTION_XP, QUESTION_COINS);
-                            }
-                            this.SendResultToPlayer(player.Key, true, QUESTION_XP, QUESTION_COINS);
-                            Console.WriteLine(player.Value.Username + " heeft het goed!");
+                            var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
+                            _PlayerService.GiveRewards(player.Value.Username, QUESTION_XP, QUESTION_COINS);
                         }
-                        else
-                        {
-                            this.SendResultToPlayer(player.Key, false, 0, 0);
-                            playersToEliminate.Add(player.Key);
-                            Console.WriteLine(player.Value.Username + " heeft het fout!");
-                            //this.EliminatePlayer(player.Key);
-                        }
+                        this.SendResultToPlayer(player.Key, true, QUESTION_XP, QUESTION_COINS);
+                        Console.WriteLine(player.Value.Username + " heeft het goed!");
                     }
                     else
                     {
                         this.SendResultToPlayer(player.Key, false, 0, 0);
-                        Console.WriteLine(player.Value.Username + " heeft niet geantwoord!");
+                        Console.WriteLine(player.Value.Username + " heeft geen goed antwoord gegegeven!");
                         playersToEliminate.Add(player.Key);
                         //this.EliminatePlayer(player.Key);
                     }
                 }
                 Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn voor de purge");
+            }
+            else
+            {
+                playersToEliminate = _allPlayers.Keys;
+            }
+
+            int finalPosition = _allPlayers.Count;
+            using (var scope = State.ServiceProvider.CreateScope())
+            {
+                var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
                 foreach (string id in playersToEliminate)
-                { 
+                {
+                    _PlayerService.RegisterResult(_allPlayers[id].Username, Mode.QUIZ_ROYALE, finalPosition);
                     this.EliminatePlayer(id);
                 }
-                Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn naa de purge");
             }
-            else 
-            {
-                foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
-                {
-                    this.EliminatePlayer(player.Key);
-                    Console.WriteLine("niemand heeft geantwoord");
-                }
-            }
+            Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn naa de purge");
 
             State.GetHubContext().Clients.All.SendAsync("playersLeft", this._allPlayers.Values); // Doucumented
 
@@ -207,6 +201,7 @@ namespace QuizRoyaleAPI.Models
                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
                 _PlayerService.GiveRewards(winnerName, WIN_XP, WIN_COINS);
                 _PlayerService.GiveWin(winnerName);
+                _PlayerService.RegisterResult(winnerName, Mode.QUIZ_ROYALE, 1);
             }
 
             await State.GetHubContext().Clients.All.SendAsync("Win", WIN_XP, WIN_COINS);// Documented
@@ -239,7 +234,7 @@ namespace QuizRoyaleAPI.Models
             if (!this._allResponses.ContainsKey(player))
             { 
                 this._allResponses.Add(player, id);
-                await State.GetHubContext().Clients.All.SendAsync("playerAwnsered", player, (DateTime.Now.Millisecond - _miliStarted) / 1000.0);
+                await State.GetHubContext().Clients.All.SendAsync("playerAnswered", player, (DateTime.Now.Millisecond - _miliStarted) / 1000.0);
             }
         }
 

@@ -6,14 +6,14 @@ namespace QuizRoyaleAPI.DTOs
     {
         public Mode Mode { get; set; }
 
-        public int RightAnswers { get; set; }
+        public DateTime Time { get; set; }
 
-        public int? Position { get; set; }
+        public int Position { get; set; }
 
-        public ResultDTO(Mode mode, int rightAnswers, int? position)
+        public ResultDTO(Mode mode, DateTime time, int position)
         {
             Mode = mode;
-            RightAnswers = rightAnswers;
+            Time = time;
             Position = position;
         }
     }

@@ -29,6 +29,16 @@ namespace QuizRoyaleAPI.Services.Data.Database
             _context.SaveChanges();
         }
 
+        public void RegisterResult(string username, Mode mode, int position)
+        {
+            Player? player = _context.Players.Where(p => p.Username == username).FirstOrDefault();
+            if(player != null)
+            {
+                player.Results.Add(new Result(mode, position));
+                _context.SaveChanges();
+            }
+        }
+
         public int CreatePlayer(string username)
         {
             var player = new Player(username);
@@ -38,6 +48,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
                 throw new UsernameTakenException();
             }
             _context.Players.Add(player);
+            SetDefaultItems(player);
             _context.SaveChanges();
             
             return player.Id;
@@ -107,6 +118,28 @@ namespace QuizRoyaleAPI.Services.Data.Database
                     i.PaymentType,
                     i.Cost, i.Description);
             }).ToList();
+        }
+
+        private IEnumerable<Item> GetFreeItems()
+        {
+            return _context.Items.Where(i => i.Cost == 0).ToList();
+        }
+
+        private void SetDefaultItems(Player player)
+        {
+            IEnumerable<Item> freeItems = GetFreeItems();
+            AddDefaultItem(player, freeItems, ItemType.BORDER);
+            AddDefaultItem(player, freeItems, ItemType.PROFILE_PICTURE);
+            AddDefaultItem(player, freeItems, ItemType.TITLE);
+        }
+
+        private void AddDefaultItem(Player player, IEnumerable<Item> items, ItemType itemType)
+        {
+            Item? item = GetSingleItemByType(items, itemType);
+            if(item != null)
+            {
+                player.AcquiredItems.Add(new AcquiredItem {ItemId = item.Id, Equipped = true });
+            }
         }
     }
 }

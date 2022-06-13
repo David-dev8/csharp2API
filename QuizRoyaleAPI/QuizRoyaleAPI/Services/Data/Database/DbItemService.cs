@@ -55,7 +55,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
 
         public IEnumerable<ItemDTO> GetItems()
         {
-            return _context.Items.Select(ConvertToItemDTO);
+            return _context.Items.OrderBy(i => i.Cost).Select(ConvertToItemDTO);
         }
 
         public IEnumerable<ItemDTO> GetItems(int userId)

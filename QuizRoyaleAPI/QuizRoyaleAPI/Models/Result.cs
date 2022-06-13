@@ -6,19 +6,20 @@ namespace QuizRoyaleAPI.Models
     {
         public int Id { get; set; }
 
+        public DateTime Time { get; set; }
+
         [MaxLength(100)]
         public Mode Mode { get; set; } // todo mode als string
 
-        public int RightAnswers { get; set; }
-
-        public int? Position { get; set; }
+        public int Position { get; set; }
 
         public int PlayerId { get; set; }
 
-        public Result(Mode mode, int rightAnswers)
+        public Result(Mode mode, int position)
         {
             Mode = mode;
-            RightAnswers = rightAnswers;
+            Position = position;
+            Time = DateTime.Now;
         }
     }
 
