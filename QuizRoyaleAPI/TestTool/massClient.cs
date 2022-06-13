@@ -11,9 +11,11 @@ namespace TestTool
     public class massClient
     {
         private HubConnection connection;
+        private int totalPlayers;
 
-        public massClient()
+        public massClient(int totalPlayers)
         {
+            this.totalPlayers = totalPlayers;
             connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:5264/GameHub")
                 .Build();
@@ -44,9 +46,9 @@ namespace TestTool
         public async Task awnserRandomly()
         {
             Random random = new Random();
-            Thread.Sleep(random.Next(100));
+            Thread.Sleep(random.Next(10000 / totalPlayers));
             int randomInt = random.Next(0, 4);
-            char[] charArray = new char[] { 'a', 'b', 'c', 'd' };
+            char[] charArray = new char[] { 'A', 'B', 'C', 'D' };
             char randomChar = charArray[randomInt];
             await connection.InvokeAsync("answerQuestion", randomChar); ;
         }

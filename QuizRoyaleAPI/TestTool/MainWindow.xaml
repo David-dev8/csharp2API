@@ -11,15 +11,24 @@
             <ColumnDefinition Width="109*"/>
             <ColumnDefinition Width="288*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="connectButton" Content="Connect" HorizontalAlignment="Left" Margin="476,42,0,0" VerticalAlignment="Top" Width="95" Click="connectButton_Click" Height="41" Grid.Column="1" />
-        <Button x:Name="sendButton" Content="Send Message" HorizontalAlignment="Left" Margin="476,92,0,0" VerticalAlignment="Top" Width="95" Click="sendButton_Click" Height="41" Grid.Column="1" IsEnabled="False"/>
-        <TextBox x:Name="messageTextBox" HorizontalAlignment="Left" Height="41" Margin="82,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="311" Grid.ColumnSpan="2"/>
-        <ListBox x:Name="messagesList" HorizontalAlignment="Left" Height="274" Margin="82,170,0,0" VerticalAlignment="Top" Width="451" RenderTransformOrigin="-0.304,0.109" BorderThickness="1" Grid.ColumnSpan="2" BorderBrush="Gainsboro"/>
-        <TextBox x:Name="userTextBox" HorizontalAlignment="Left" Height="41" Margin="82,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="311" Grid.ColumnSpan="2"/>
-        <Label Content="User" HorizontalAlignment="Left" Height="31" Margin="39,63,0,0" VerticalAlignment="Top" Width="38"/>
-        <Label Content="Message" HorizontalAlignment="Left" Height="26" Margin="19,120,0,0" VerticalAlignment="Top" Width="58"/>
-        <Button x:Name="joinButton" Content="Join game" HorizontalAlignment="Left" Margin="476,145,0,0" VerticalAlignment="Top" Width="95" Click="joinButton_Click" Height="41" Grid.Column="1" />
-        <Button x:Name="joinButton_Copy" Content="Mass populate game" HorizontalAlignment="Left" Margin="476,403,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_Copy_Click" Height="79" Grid.Column="1" />
-
+        <Button x:Name="connectButton" Content="Test Connect" HorizontalAlignment="Left" Margin="82,32,0,0" VerticalAlignment="Top" Width="95" Click="connectButton_Click" Height="40" />
+        <ListBox x:Name="messagesList" HorizontalAlignment="Left" Height="37" Margin="82,92,0,0" VerticalAlignment="Top" Width="465" RenderTransformOrigin="-0.304,0.109" BorderThickness="1" Grid.ColumnSpan="2" BorderBrush="Gainsboro"/>
+        <Button x:Name="joinButton_Copy" Tag="5"  Content="Add 5 bots" HorizontalAlignment="Left" Margin="82,162,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_Copy_Click" Height="79" />
+        <Button x:Name="joinButton_Copy1" Tag="10" Content="Add 10 bots" HorizontalAlignment="Left" Margin="80,262,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_Copy_Click" Height="79" />
+        <Button x:Name="joinButton_Copy2" Tag="25" Content="Add 25 bots" HorizontalAlignment="Left" Margin="80,362,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_Copy_Click" Height="79" />
+        <Button x:Name="joinButton_Copy3" Tag="50" Content="Add 50 bots" HorizontalAlignment="Left" Margin="175,162,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_Copy_Click" Height="79" Grid.Column="1" />
+        <Button x:Name="joinButton_Copy4" Tag="100" Content="Add 100 bots" HorizontalAlignment="Left" Margin="173,262,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_Copy_Click" Height="79" Grid.Column="1" />
+        <Button x:Name="joinButton_Copy5" Tag="250" Content="Add too many bots" HorizontalAlignment="Left" Margin="173,362,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_Copy_Click" Height="79" Grid.Column="1" />
+        <Button x:Name="joinButton_specific" Content="Add 1 bots" HorizontalAlignment="Left" Margin="424,362,0,0" VerticalAlignment="Top" Width="137" Click="joinButton_specific_Click" Height="79" Grid.Column="1" />
+        <Slider x:Name="amountSlider" ValueChanged="amountSlider_ValueChanged" IsSnapToTickEnabled="True" TickFrequency="1" Maximum="500" Minimum="1" Grid.Column="1" Margin="190,213,7,197" RenderTransformOrigin="0.5,0.5">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="270"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
     </Grid>
 </Window>
