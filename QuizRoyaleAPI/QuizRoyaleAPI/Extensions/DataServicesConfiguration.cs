@@ -5,8 +5,17 @@ using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.Extensions
 {
+
+    /// <summary>
+    /// DataServicesConfiguration, Deze statiche klasse bevat een methode om alle services toe te voegen aan de program
+    /// </summary>
     public static class DataServicesConfiguration
     {
+
+        /// <summary>
+        /// Voegt alle services toe aan de program
+        /// </summary>
+        /// <param name="services">Alle extensions</param>
         public static void AddDataServices(this IServiceCollection services)
         {
             services.AddScoped<IQuestionService, DbQuestionService>();

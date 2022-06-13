@@ -1,5 +1,9 @@
 ﻿namespace QuizRoyaleAPI.DTOs
 {
+    /// <summary>
+    /// PlayerDTO, Dit is een DTO object voor een Player
+    /// deze player bevat niet genoeg data voor het spelen van een game, gebruik daarvoor InGamePlayerDTO
+    /// </summary>
     public class PlayerDTO
     {
         public string Username { get; set; }

@@ -1,5 +1,8 @@
 ﻿namespace QuizRoyaleAPI.DTOs
 {
+    /// <summary>
+    /// MasteryDTO, Dit is een DTO object voor een Mastery
+    /// </summary>
     public class MasteryDTO
     {
         public CategoryDTO Category { get; set; }

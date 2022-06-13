@@ -8,9 +8,16 @@ using QuizRoyaleAPI.Services.Data;
 
 namespace QuizRoyaleAPI.Hubs
 {
+    /// <summary>
+    /// De GameHub, Dit is de hub waarin de game plaatsvindt
+    /// </summary>
     public class GameHub : Hub
     {
-
+        /// <summary>
+        /// Deze methode kan worden aangeroepen door een client om te proberen te joinen
+        /// </summary>
+        /// <param name="username">De username van de client die wil joinen</param>
+        /// <returns>Een joinstatus event naar de client</returns>
         public async Task join(string username)
         {
             Console.WriteLine(username + " wil Joinen");
@@ -57,18 +64,33 @@ namespace QuizRoyaleAPI.Hubs
             }
         }
 
-
+        /// <summary>
+        /// Deze methode kan worden aangeroepen door de client om een spel handmatig te verlaten
+        /// </summary>
+        /// <returns>Een gameOver event naar de player die wil leaven</returns>
         public async Task leave()
         {
             await State.CurrentGame.EliminatePlayer(Context.ConnectionId);
         }
 
+
+        /// <summary>
+        /// Deze methode kan worden aangeroepen door de client om een vraag te beantwoorden
+        /// </summary>
+        /// <param name="AwnserID">De ID van het antwoord dat de client geeft</param>
+        /// <returns>Void</returns>
         public async Task answerQuestion(char AwnserID)
         {
             Console.WriteLine(Context.ConnectionId + " wil " + AwnserID + " antwoorden!");
             State.CurrentGame.AnswerQuestion(AwnserID, Context.ConnectionId);
         }
 
+        /// <summary>
+        /// Deze methode kan worden aangeroepen door de client om een boost te gebruiken
+        /// </summary>
+        /// <param name="type">De type van het boost die de speler wil gebruiken</param>
+        /// <param name="options">De opties voor de boost, dit is alleen toepaselijk bij bepaalde boosts</param>
+        /// <returns>Afhankelijk van de boost die gebruikt wordt</returns>
         public async Task useBoost(string type, string options)
         {
             if (options == "")
@@ -79,10 +101,3 @@ namespace QuizRoyaleAPI.Hubs
         }
     }
 }
-
-// Socket function template
-//
-//public async Task FunctionName(Parameter)
-//{
-//    await Clients.All.SendAsync("FunctionID", ParametersToSend);
-//}

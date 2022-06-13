@@ -2,6 +2,9 @@
 
 namespace QuizRoyaleAPI.DTOs
 {
+    /// <summary>
+    /// ResultDTO, Dit is een DTO object voor een Result
+    /// </summary>
     public class ResultDTO
     {
         public Mode Mode { get; set; }

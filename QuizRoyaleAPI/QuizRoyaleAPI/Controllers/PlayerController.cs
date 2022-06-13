@@ -6,6 +6,10 @@ using QuizRoyaleAPI.Services.Data;
 
 namespace QuizRoyaleAPI.Controllers
 {
+    /// <summary>
+    /// Player Controller, Meer informatie over de player endpoints zijn te vinden in swagger
+    /// Deze klasse handeld het creeren van PlayerDTO's af
+    /// </summary>
     [ApiController]
     [Authorize]
     [Route("[controller]")]

@@ -4,6 +4,10 @@ using QuizRoyaleAPI.Services.Data;
 
 namespace QuizRoyaleAPI.Controllers
 {
+
+    /// <summary>
+    /// Item Controller, Meer informatie over de Item endpoints zijn te vinden in swagger
+    /// </summary>
     [ApiController]
     [Authorize]
     [Route("[controller]")]

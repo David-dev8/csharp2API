@@ -1,5 +1,8 @@
 ﻿namespace QuizRoyaleAPI.DTOs
 {
+    /// <summary>
+    /// DivisionDTO, Dit is een DTO object voor een Division
+    /// </summary>
     public class DivisionDTO
     {
         public string Rank { get; set; }

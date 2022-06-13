@@ -4,6 +4,9 @@ using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.DataAccess
 {
+    /// <summary>
+    /// QuizRoyaleDbContext, TODO david
+    /// </summary>
     public class QuizRoyaleDbContext : DbContext
     {
         public QuizRoyaleDbContext(DbContextOptions options) : base(options)
