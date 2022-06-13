@@ -5,6 +5,9 @@ using System.Security.Claims;
 
 namespace QuizRoyaleAPI.Services.Auth
 {
+    /// <summary>
+    /// UserJWTAuthService, Regelt alle autheticatie met betrekking tot spelers
+    /// </summary>
     public class UserJWTAuthService: IAuthService
     {
         private readonly IConfiguration _configuration;
@@ -20,6 +23,11 @@ namespace QuizRoyaleAPI.Services.Auth
             
         }
 
+        /// <summary>
+        /// Maakt een token aan voor een speler
+        /// </summary>
+        /// <param name="id">De userID van de speler waarvoor je een token wilt maken</param>
+        /// <returns>Een JBTtoken als string</returns>
         private string GenerateToken(int id)
         {
             return new JwtSecurityTokenHandler().WriteToken(

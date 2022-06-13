@@ -6,6 +6,9 @@ using QuizRoyaleAPI.Models.BadgeRule;
 
 namespace QuizRoyaleAPI.Services.Data.Database
 {
+    /// <summary>
+    /// DbPlayerDataService, Een implementatie van de PlayerDataService die comuniceerd met een Database
+    /// </summary>
     public class DbPlayerDataService : IPlayerDataService
     {
         private readonly QuizRoyaleDbContext _context;

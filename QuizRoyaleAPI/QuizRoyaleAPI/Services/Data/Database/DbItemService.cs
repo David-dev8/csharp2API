@@ -5,6 +5,9 @@ using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.Services.Data.Database
 {
+    /// <summary>
+    /// DbItemService, Een implementatie van de ItemService die comuniceerd met een Database
+    /// </summary>
     public class DbItemService : IItemService
     {
         private readonly QuizRoyaleDbContext _context;

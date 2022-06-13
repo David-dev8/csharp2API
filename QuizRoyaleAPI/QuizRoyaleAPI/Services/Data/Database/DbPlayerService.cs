@@ -5,6 +5,9 @@ using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.Services.Data.Database
 {
+    /// <summary>
+    /// DbPlayerService, Een implementatie van de PlayerService die comuniceerd met een Database
+    /// </summary>
     public class DbPlayerService : IPlayerService
     {
         private readonly QuizRoyaleDbContext _context;
