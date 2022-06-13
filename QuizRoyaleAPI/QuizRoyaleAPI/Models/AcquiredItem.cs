@@ -1,5 +1,8 @@
 ﻿namespace QuizRoyaleAPI.Models
 {
+    /// <summary>
+    /// Dit is het AcquiredItem object
+    /// </summary>
     public class AcquiredItem
     {
         public int ItemId { get; set; }

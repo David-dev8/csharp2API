@@ -2,6 +2,9 @@
 
 namespace QuizRoyaleAPI.Models
 {
+    /// <summary>
+    /// Dit is het Divisie object
+    /// </summary>
     public class Division
     {
         public int Id { get; set; }

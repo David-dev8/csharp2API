@@ -2,6 +2,9 @@
 
 namespace QuizRoyaleAPI.Models
 {
+    /// <summary>
+    /// Dit is het categorie object
+    /// </summary>
     public class Category
     {
         public int Id { get; set; }

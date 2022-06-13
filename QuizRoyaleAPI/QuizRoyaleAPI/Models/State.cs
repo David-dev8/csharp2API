@@ -3,6 +3,9 @@ using QuizRoyaleAPI.Hubs;
 
 namespace QuizRoyaleAPI.Models
 {
+    /// <summary>
+    /// Dit is statiche klasse die alle dingen bevat die belangrijk zijn voor een game zodat ze niet worden gedisposed
+    /// </summary>
     public static class State
     {
         public static Game CurrentGame { get; set; }

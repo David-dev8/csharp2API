@@ -2,6 +2,9 @@
 
 namespace QuizRoyaleAPI.Models
 {
+    /// <summary>
+    /// Dit is een Rank object
+    /// </summary>
     public class Rank
     {
         public int Id { get; set; }

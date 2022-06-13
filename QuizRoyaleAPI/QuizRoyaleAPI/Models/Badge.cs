@@ -2,6 +2,9 @@
 
 namespace QuizRoyaleAPI.Models
 {
+    /// <summary>
+    /// Dit is het Badge object
+    /// </summary>
     public class Badge
     {
         public int Id { get; set; }

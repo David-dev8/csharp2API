@@ -2,6 +2,9 @@
 
 namespace QuizRoyaleAPI.Models
 {
+    /// <summary>
+    /// Dit een een Result object
+    /// </summary>
     public class Result
     {
         public int Id { get; set; }
