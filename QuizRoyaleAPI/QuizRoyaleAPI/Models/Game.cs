@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace QuizRoyaleAPI.Models
 {
+    /// <summary>
+    /// Dit is de game, alle logika en data met betrekking tot een game wordt hiet afgehandeld
+    /// </summary>
     public class Game
     {
         private QuestionDTO _currentQuestion;
@@ -47,6 +50,10 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
+        /// <summary>
+        /// Start de timer voor de antwoord tijd van een vraag
+        /// </summary>
+        /// <param name="questionTime">Hoe lang de spelers hebben om te antwoorden in miliseconden</param>
         // Set de timer voor de vraag
         public void SetTimer(int questionTime)
         {
@@ -62,6 +69,9 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
+        /// <summary>
+        /// Start een timer voor de cooldown tussen vragen in
+        /// </summary>
         private void SetCooldownTimer() 
         {
             if (State.CurrentGame != null)
@@ -75,20 +85,33 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
-        //start de timer voor de volgende vraag weer op
+        /// <summary>
+        /// Start de volgende vraag
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="e">eventArgs</param>
         private void StartNextQuestion(Object source, ElapsedEventArgs e)
         { 
             this.SetTimer(this._questionTimeInMili);
             this.NotifyNextQuestion();
         }
 
-        //Laat iedereen weten dat de volgende vraag begint
+        /// <summary>
+        /// Laat iedereen weten dat de volgende vraag begint
+        /// </summary>
+        /// <returns>void</returns>
         private async Task NotifyNextQuestion() 
         {
             await State.GetHubContext().Clients.All.SendAsync("StartQuestion");// Documented
         }
 
-        // Haalt en stuurt de volgende vraag op
+        /// <summary>
+        /// kiest en stuurt de volgende vraag op. 
+        /// Vragen worden gekozen op basis van een random categorie. 
+        /// De kansen van deze random categorieen kunnen worden beinvloed met boosters. 
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="e">EventArgs</param>
         private void NextQuestion(object? source, ElapsedEventArgs e)
         {
             if (this._currentQuestion != null)
@@ -120,14 +143,19 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
-        // Stuurt de volgende vraag
+        /// <summary>
+        /// Stuurt de inhoud van de volgende vraag op
+        /// </summary>
+        /// <returns>stuurt de QuestionDTO op naar alle clients</returns>
         public async Task SendNewQuestion()
         {
             await State.GetHubContext().Clients.All.SendAsync("newQuestion", _currentQuestion);// Documented
             Console.WriteLine("----------------> " + _currentQuestion.RightAnswer + " is het goede antwoord <-----------------");
         }
 
-        // haalt de resultaten van de vorige vraag op om te sturen
+        /// <summary>
+        /// haalt de resultaten van de vorige vraag op om te sturen
+        /// </summary>
         private void SendResultsFromLastQuestion()
         {
             ICollection<string> playersToEliminate = new List<string>();
@@ -185,6 +213,11 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
+        /// <summary>
+        /// Eindigd het spel in gelijkspel. 
+        /// Dit kan voorkomen als alle spelers een vraag fout of niet beantwoorden
+        /// </summary>
+        /// <returns>void</returns>
         // Als alle spelers af zijn is er geen winner en is de game voorbij
         public async Task EndTie()
         { 
@@ -193,6 +226,11 @@ namespace QuizRoyaleAPI.Models
             Console.WriteLine("gelijkspelgelijkspelgelijkspelgelijkspelgelijkspelgelijkspel");
         }
 
+        /// <summary>
+        /// Eindigd het spel in een winst voor een speler
+        /// </summary>
+        /// <param name="winnerName">De username van de speler die heeft gewonnen</param>
+        /// <returns>void</returns>
         // Als er maar 1 speler over is dan wint deze speler
         public async Task EndWin(string winnerName)
         {
@@ -210,6 +248,9 @@ namespace QuizRoyaleAPI.Models
             Console.WriteLine("winnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnn");
         }
 
+        /// <summary>
+        /// Collect alle timers om het spel netjes af te sluiten
+        /// </summary>
         private void RemoveTimers()
         {
             _timer.Elapsed -= NextQuestion;
@@ -221,13 +262,25 @@ namespace QuizRoyaleAPI.Models
             _startDelayTimer.Dispose();
         }
 
-        // Stuurt de resultaat van de vorige vraag 
+        /// <summary>
+        /// Stuurt de resultaten van de vorige vraag op
+        /// </summary>
+        /// <param name="conectionId">De conectie waarnaa het resultaat moet worden gestuurd</param>
+        /// <param name="result">Het resultaat dat de speler heeft</param>
+        /// <param name="xp">Het aantal XP dat de speler heeft verdient met dit resultaat</param>
+        /// <param name="coins">Het aantal coins dat de speler heeft verdient met dit resultaat</param>
+        /// <returns>Geeft de client een event met zijn resultaten</returns>
         private async Task SendResultToPlayer(string conectionId, bool result, int xp, int coins)
         {
             await State.GetHubContext().Clients.Client(conectionId).SendAsync("result", result, xp, coins); // Documented
         }
 
-        // Registreert een antwoord
+        /// <summary>
+        /// Registreerd een antwoord van een speler
+        /// </summary>
+        /// <param name="id">De answerID van de awnser die de speler heeft gegeven</param>
+        /// <param name="conectionId">De conectie van de speler die het resultaat stuurt</param>
+        /// <returns>Stuurt alle clients een event dat iemand heeft geantwoord met de tijd erbij</returns>
         public async Task AnswerQuestion(char id, string conectionId)
         {
             InGamePlayerDTO player = this._allPlayers[conectionId];
@@ -238,20 +291,31 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
-        // Gebruikt een boost
+        /// <summary>
+        /// Gebruikt een boost
+        /// </summary>
+        /// <param name="type">De type Booster die je wilt gebruiken</param>
+        /// <param name="options">De opties voor de booster</param>
         public void UseBoost(string type, string options)
         {
             _boosterFactory.getBooster(type).use(this, options);
         }
 
-        // Elimineerd een speler
+        /// <summary>
+        /// Elimineerd een speler uit een game
+        /// </summary>
+        /// <param name="playerID">De Conectie van de speler die moet worden geelimineerd</param>
+        /// <returns>Geeft de geelimineerde speler een event om te laten weten dat hij af is</returns>
         public async Task EliminatePlayer(string playerID)
         {
             this._allPlayers.Remove(playerID);
             await State.GetHubContext().Clients.Client(playerID).SendAsync("gameOver"); // Doucumented
         }
 
-        // Kijkt of het mogelijk is om een potje te starten
+        /// <summary>
+        /// Kijkt of het mogelijk is om een spel te starten
+        /// </summary>
+        /// <returns>True als een spel gestart kan worden, anders false</returns>
         public bool CanStart()
         {
             if (this._allPlayers.Count >= this._minimumPlayers && this._allPlayers.Count <= this._maximumPlayers && this._inProgress == false)
@@ -261,7 +325,10 @@ namespace QuizRoyaleAPI.Models
             return false;
         }
 
-        // Start een potje
+        /// <summary>
+        /// Start een game
+        /// </summary>
+        /// <returns>Stuurt alle clients een event dat het spel is gestart</returns>
         public async Task Start()
         {
             if (this.CanStart())
@@ -272,7 +339,10 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
-        // Kijkt om het mogelijk is voor een speler om te joinen
+        /// <summary>
+        /// Kijkt of het mogelijk is voor en nieuwe speler om te joinen
+        /// </summary>
+        /// <returns>True als de speler kan joinen, anders false</returns>
         public bool CanJoin()
         {
             if (this._allPlayers.Count < this._maximumPlayers && this._inProgress == false)
@@ -282,7 +352,11 @@ namespace QuizRoyaleAPI.Models
             return false;
         }
 
-        // Laat een speler Joinen
+        /// <summary>
+        /// Laat een speler joinen
+        /// </summary>
+        /// <param name="name">De naam van de speler die joined</param>
+        /// <param name="conectionId">De conectie van de speler die joined</param>
         public void Join(string name, string conectionId)
         {
             using (var scope = State.ServiceProvider.CreateScope())
@@ -302,13 +376,18 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
-        // Haalt de hoeveelheid spelers op
+        /// <summary>
+        /// Haalt de hoeveelheid spelers in de game op
+        /// </summary>
+        /// <returns>De hoeveelheid spelers</returns>
         public int GetAmountOfPlayers()
         {
             return this._allPlayers.Count();
         }
 
-        // Set de timer voor het starten van een spel
+        /// <summary>
+        /// Set de timer voor het starten van een spel
+        /// </summary>
         private void SetStartTimer()
         {
             if (_startDelayTimer != null)
@@ -328,13 +407,21 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
-        // Methode om het startcomando uit te voeren
+        /// <summary>
+        /// Methode om het startcomando uit te voeren
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="e">EventArgs</param>
         private void startGame(Object source, ElapsedEventArgs e)
         {
             this.Start();
 
         }
 
+        /// <summary>
+        /// Geeft alle spelers in de game 
+        /// </summary>
+        /// <returns>Een collectie van InGamePlayerDTO's</returns>
         public IList<InGamePlayerDTO> GetPlayerNames()
         {
             IList<InGamePlayerDTO> names = new List<InGamePlayerDTO>();
@@ -347,6 +434,11 @@ namespace QuizRoyaleAPI.Models
             return names;
         }
 
+        /// <summary>
+        /// Geeft een InGamePlayerDTO aan de hand van een username
+        /// </summary>
+        /// <param name="name">De naam van de speler waarvan je een InGamePlayerDTO wilt hebben</param>
+        /// <returns>Een InGamePlayerDTO</returns>
         public InGamePlayerDTO GetPlayerObj(string name)
         {
             using (var scope = State.ServiceProvider.CreateScope())
@@ -357,6 +449,10 @@ namespace QuizRoyaleAPI.Models
             }
         }
 
+        /// <summary>
+        /// Geeft alle categories in de game op als masteryDTO's, omdat je geen Dictionaries kan sturen
+        /// </summary>
+        /// <returns>Een collectie van MasteryDTO's</returns>
         public IList<MasteryDTO> getCategories()
         {
             IList<MasteryDTO> list = new List<MasteryDTO>();
