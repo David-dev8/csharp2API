@@ -5,7 +5,7 @@
     /// </summary>
     public class WinStreakBadgeRule : IBadgeRule
     {
-        public bool HasEarned(Player player)
+        public bool HasEarned(Player player, int gradation)
         {
             int streak = 0;
             int maxStreak = 0;
@@ -23,7 +23,7 @@
                     maxStreak = streak;
                 }
             }
-            return maxStreak > 1;
+            return maxStreak >= gradation;
         }
     }
 }

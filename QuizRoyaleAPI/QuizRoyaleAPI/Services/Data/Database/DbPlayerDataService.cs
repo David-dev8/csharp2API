@@ -44,22 +44,36 @@ namespace QuizRoyaleAPI.Services.Data.Database
 
         public IEnumerable<MasteryDTO> GetMastery(int userId)
         {
-            return GetPlayer(userId).Mastery.Join(_context.Categories,
-                cm => cm.CategoryId,
+            return _context.Categories.ToList().GroupJoin(GetPlayer(userId).Mastery.ToList(),
                 c => c.Id,
-                (cm, c) => new
+                cm => cm.CategoryId,
+                (c, cm) => new
                 {
                     Category = c,
-                    SuccessRate = cm.AmountOfQuestions == 0 ? 0 : cm.QuestionsRight / (double)cm.AmountOfQuestions
+                    Rates = cm
                 }
-            ).Select(m => new MasteryDTO(
-                new CategoryDTO(
-                    m.Category.Id,
-                    m.Category.Name,
-                    m.Category.Color,
-                    m.Category.Picture),
-                Math.Round(m.SuccessRate, 2)
-            ));
+            ).SelectMany(
+                m => m.Rates.DefaultIfEmpty(),
+                (c, cm) => new MasteryDTO(
+                    new CategoryDTO(
+                        c.Category.Id,
+                        c.Category.Name,
+                        c.Category.Color,
+                        c.Category.Picture),
+                    GetPercentageOfRightAnswers(cm))
+            ).ToList();
+        }
+
+        private double GetPercentageOfRightAnswers(CategoryMastery? mastery)
+        {
+            if(mastery == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return 100 * Math.Round(mastery.AmountOfQuestions == 0 ? 0 : mastery.QuestionsRight / (double)mastery.AmountOfQuestions, 2);
+            }
         }
 
         public IEnumerable<ResultDTO> GetResults(int userId)
@@ -104,14 +118,14 @@ namespace QuizRoyaleAPI.Services.Data.Database
             } 
             else
             {
-                int position = _context.Players.OrderBy(p => p.AmountOfWins).ToList().FindIndex((p) => p.Id == userId);
+                int position = _context.Players.OrderByDescending(p => p.AmountOfWins).ToList().FindIndex((p) => p.Id == userId);
                 return (int)((double)100 * position / _context.Players.Count());
             }
         }
 
         private bool CanBeRewarded(Badge badge, Player player)
         {
-            return _badgeRuleFactory.GetRule(badge.Type, badge.Gradation).HasEarned(player);
+            return _badgeRuleFactory.GetRule(badge.Type).HasEarned(player, badge.Gradation);
         }
     }
 }

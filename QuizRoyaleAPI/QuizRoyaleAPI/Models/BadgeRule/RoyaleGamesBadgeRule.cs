@@ -5,9 +5,9 @@
     /// </summary>
     public class RoyaleGamesBadgeRule : IBadgeRule
     {
-        public bool HasEarned(Player player)
+        public bool HasEarned(Player player, int gradation)
         {
-            return player.Results.Where(r => r.Mode == Mode.QUIZ_ROYALE).Count() > 1;
+            return player.Results.Where(r => r.Mode == Mode.QUIZ_ROYALE).Count() >= gradation;
         }
     }
 }

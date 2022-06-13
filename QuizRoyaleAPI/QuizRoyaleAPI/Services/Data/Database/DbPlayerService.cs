@@ -82,8 +82,8 @@ namespace QuizRoyaleAPI.Services.Data.Database
                 throw new PlayerNotFoundException();
             }
 
-            IEnumerable<int> acquiredItemsIds = player.AcquiredItems.Select(ai => ai.ItemId).ToList();
-            IEnumerable<Item> items = _context.Items.Where(i => acquiredItemsIds.Contains(i.Id));
+            IEnumerable<int> activeItemsIds = player.AcquiredItems.Where(ai => ai.Equipped).Select(ai => ai.ItemId).ToList();
+            IEnumerable<Item> items = _context.Items.Where(i => activeItemsIds.Contains(i.Id));
 
             return new InGamePlayerDTO(
                 player.Username,

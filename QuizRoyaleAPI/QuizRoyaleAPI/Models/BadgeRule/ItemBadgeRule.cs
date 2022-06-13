@@ -5,9 +5,9 @@
     /// </summary>
     public class ItemBadgeRule : IBadgeRule
     {
-        public bool HasEarned(Player player)
+        public bool HasEarned(Player player, int gradation)
         {
-            return player.AcquiredItems.Count() > 1;
+            return player.AcquiredItems.Count() >= gradation;
         }
     }
 }

@@ -9,7 +9,8 @@
         /// Kijkt of een speler deze badge heeft verdient
         /// </summary>
         /// <param name="player">De speler die gechecked moet worden</param>
+        /// <param name="gradation">De gradatie waartegen gecontroleerd moet worden. Hoe hoger de gradatie, hoe moeilijker een badge te verkrijgen is.</param>
         /// <returns>True als de speler deze badge verdient, anders false</returns>
-        public bool HasEarned(Player player);
+        public bool HasEarned(Player player, int gradation);
     }
 }

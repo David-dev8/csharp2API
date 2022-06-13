@@ -11,10 +11,9 @@ namespace QuizRoyaleAPI.Models.BadgeRule
         /// Maakt een BadgeRule aan de hand van het type
         /// </summary>
         /// <param name="type">De type badgeRule dat je wil maken</param>
-        /// <param name="gradation">Het level van de badge</param>
         /// <returns>Een BadgeRule</returns>
         /// <exception cref="UnsupportedRuleException">Deze exceptie wordt gegooid zodra er geen badgeRule kan worden gevonden dat overeenkomt met de gegeven type</exception>
-        public IBadgeRule GetRule(BadgeType type, int gradation)
+        public IBadgeRule GetRule(BadgeType type)
         {
             // todo factory met enums of strings?
             return type switch
@@ -22,7 +21,7 @@ namespace QuizRoyaleAPI.Models.BadgeRule
                 BadgeType.WINSTREAK => new WinStreakBadgeRule(),
                 BadgeType.TOTAL_WINS => new TotalWinsBadgeRule(),
                 BadgeType.ROYALE_PLAYED => new RoyaleGamesBadgeRule(),
-                BadgeType.ITEM_UNLOCKER => new ItemBadgeRule(),
+                BadgeType.ITEMS_UNLOCKED => new ItemBadgeRule(),
                 BadgeType.MASTERY => new MasteryBadgeRule(),
                 _ => throw new UnsupportedRuleException(),
             };

@@ -41,7 +41,7 @@ namespace QuizRoyaleAPI.Models
         WINSTREAK,
         TOTAL_WINS,
         ROYALE_PLAYED,
-        ITEM_UNLOCKER,
+        ITEMS_UNLOCKED,
         MASTERY
     }
 }

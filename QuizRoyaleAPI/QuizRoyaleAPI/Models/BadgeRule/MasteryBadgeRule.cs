@@ -5,7 +5,7 @@
     /// </summary>
     public class MasteryBadgeRule : IBadgeRule
     {
-        public bool HasEarned(Player player)
+        public bool HasEarned(Player player, int gradation)
         {
             List<CategoryMastery> mastery = player.Mastery.ToList();
             if(!mastery.Any())
@@ -13,7 +13,7 @@
                 return false;
             }
 
-            return mastery.Average(m => m.QuestionsRight / (double)m.AmountOfQuestions) > 1;
+            return 100 * mastery.Average(m => m.QuestionsRight / (double)m.AmountOfQuestions) >= gradation;
         }
     }
 }

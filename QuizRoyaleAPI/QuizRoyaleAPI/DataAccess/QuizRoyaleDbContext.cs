@@ -40,6 +40,11 @@ namespace QuizRoyaleAPI.DataAccess
                 r.Property(r => r.Mode).HasConversion(new EnumToStringConverter<Mode>());
             });
 
+            modelBuilder.Entity<Badge>(b =>
+            {
+                b.Property(b => b.Type).HasConversion(new EnumToStringConverter<BadgeType>());
+            });
+
             modelBuilder.Entity<AcquiredItem>(entity =>
             {
                 entity.HasKey(ai => new { ai.ItemId, ai.PlayerId });
