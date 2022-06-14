@@ -18,13 +18,13 @@ namespace QuizRoyaleAPI.Models.Boosters
         {
             foreach (KeyValuePair<CategoryDTO, float> category in game._categories)
             {
-                if (category.Key.Id.ToString() == id)
+                if (category.Key.Name == id)
                 {
                     game._categories[category.Key] += 10;
                 }
                 else 
                 {
-                    game._categories[category.Key] -= (float)(10.0 / game._categories.Count);
+                    game._categories[category.Key] -= (float)(10.0 / (game._categories.Count - 1));
                 }
 
                 if (game._categories[category.Key] < 1)

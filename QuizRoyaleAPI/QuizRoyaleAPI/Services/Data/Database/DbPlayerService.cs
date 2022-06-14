@@ -144,5 +144,14 @@ namespace QuizRoyaleAPI.Services.Data.Database
                 player.AcquiredItems.Add(new AcquiredItem {ItemId = item.Id, Equipped = true });
             }
         }
+
+        public void removeItem(string username, string itemName)
+        {
+            Player? player = _context.Players.Where(p => p.Username == username).FirstOrDefault();
+            Item? item = _context.Items.Where(p => p.Name == itemName).FirstOrDefault();
+            AcquiredItem? acquiredItem = player.AcquiredItems.Where(i => i.ItemId == item.Id).FirstOrDefault();
+            player.AcquiredItems.Remove(acquiredItem);
+            _context.SaveChanges();
+        }
     }
 }

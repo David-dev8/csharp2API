@@ -97,7 +97,8 @@ namespace QuizRoyaleAPI.Hubs
             {
                 options = Context.ConnectionId;
             }
-            State.CurrentGame.UseBoost(type, options);
+            Console.WriteLine(Context.ConnectionId + " Wil een " + type + " booster gebruiken! met de opties: " + options);
+            State.CurrentGame.UseBoost(type, options, Context.ConnectionId);
         }
     }
 }

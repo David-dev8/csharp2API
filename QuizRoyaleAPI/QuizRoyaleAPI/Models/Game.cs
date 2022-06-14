@@ -296,9 +296,23 @@ namespace QuizRoyaleAPI.Models
         /// </summary>
         /// <param name="type">De type Booster die je wilt gebruiken</param>
         /// <param name="options">De opties voor de booster</param>
-        public void UseBoost(string type, string options)
+        /// <param name="conncectionId">De connectieID van de speler</param>
+        public void UseBoost(string type, string options, string conncectionId)
         {
+            using (var scope = State.ServiceProvider.CreateScope())
+            {
+                var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
+                _PlayerService.removeItem(this._allPlayers[conncectionId].Username, type);
+            }
             _boosterFactory.getBooster(type).use(this, options);
+            Console.WriteLine("De kansen zijn Nu: ");
+            float totaal = 0;
+            foreach (KeyValuePair<CategoryDTO, float> chance in this._categories)
+            {
+                Console.WriteLine(chance.Key.Name + " Heeft nu een kans van " + chance.Value + "%");
+                totaal += chance.Value;
+                Console.WriteLine("Totaal is nu " + totaal + "%");
+            }
         }
 
         /// <summary>

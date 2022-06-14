@@ -16,13 +16,13 @@ namespace QuizRoyaleAPI.Models
         {
             switch (boostername)
             {
-                case "CategoryIncrease":
+                case "Category increase":
                     return new CategoryIncreaseBooster();
-                case "FreeSkip":
+                case "Skip":
                     return new FreeSkipBooster();
-                case "Hint":
+                case "Fifty fifty":
                     return new HintBooster();
-                case "ReduceTime":
+                case "Hurry!":
                     return new ReduceTimeBooster();
                 default:
                     return null;

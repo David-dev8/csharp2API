@@ -39,6 +39,13 @@ namespace QuizRoyaleAPI.Services.Data
         public void RegisterResult(string username, Mode mode, int position);
 
         /// <summary>
+        /// Removed een item van een spelers inventory
+        /// </summary>
+        /// <param name="username">De username van de speler waarvan je de item wilt removen</param>
+        /// <param name="itemName">De item die je wilt removen</param>
+        public void removeItem(string username, string itemName);
+
+        /// <summary>
         /// Maakt een speler aan
         /// </summary>
         /// <param name="username">De username van de nieuwe speler</param>
