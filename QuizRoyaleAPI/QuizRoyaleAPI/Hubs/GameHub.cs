@@ -34,21 +34,21 @@ namespace QuizRoyaleAPI.Hubs
 
                     // Stuurt alleen een melding naar de client die wil joinen
                     int playersLeft = State.CurrentGame.MinimumPlayers - State.CurrentGame.GetAmountOfPlayers();
-                    if (playersLeft > 0)
+                    if (playersLeft >= 0)
                     {
-                        string message = "Welkom, we wachten nog op " + playersLeft + " spelers";
+                        string message = playersLeft == 0 ? "The game will start soon" : 
+                            "Welcome, we are currently waiting for " + playersLeft + " players";
                         IList<InGamePlayerDTO> players = State.CurrentGame.GetPlayerNames();
                         IList<MasteryDTO> categories = State.CurrentGame.getCategories();
                         await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
                     }
 
                     InGamePlayerDTO player = State.CurrentGame.GetPlayerObj(username);
-                    await Clients.Others.SendAsync("newPlayerJoin", player, "We wachten nog op " + playersLeft + " spelers");
+                    await Clients.Others.SendAsync("newPlayerJoin", player, "We are waiting for " + playersLeft + " spelers");
 
                     if (State.CurrentGame.CanStart())
                     {
-                        string message = "Het spel begint binnenkort";
-                        await Clients.All.SendAsync("updateStatus", message);
+                        await Clients.All.SendAsync("updateStatus", "The game will start soon");
                     }
                 }
                 catch 

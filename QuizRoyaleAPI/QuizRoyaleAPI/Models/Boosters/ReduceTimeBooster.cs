@@ -15,7 +15,7 @@ namespace QuizRoyaleAPI.Models.Boosters
         /// <param name="options">De conectieID van de speler die de boost gebruikt</param>
         public void use(Game game, string options)
         {
-            game.Timer.Stop();
+            game.QuestionTimer.Stop();
             game.SetTimer(2000);
             this.Anounce();
         }

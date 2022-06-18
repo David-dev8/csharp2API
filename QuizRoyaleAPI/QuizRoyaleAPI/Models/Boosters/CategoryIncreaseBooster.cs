@@ -16,24 +16,24 @@ namespace QuizRoyaleAPI.Models.Boosters
         /// <param name="id">De ID van de categorie die moet worden opgehoogd</param>
         public void use(Game game, string id)
         {
-            foreach (KeyValuePair<CategoryDTO, float> category in game._categories)
+            foreach (KeyValuePair<CategoryDTO, float> category in game.Categories)
             {
                 if (category.Key.Name == id)
                 {
-                    game._categories[category.Key] += 10;
+                    game.Categories[category.Key] += 10;
                 }
                 else 
                 {
-                    game._categories[category.Key] -= (float)(10.0 / (game._categories.Count - 1));
+                    game.Categories[category.Key] -= (float)(10.0 / (game.Categories.Count - 1));
                 }
 
-                if (game._categories[category.Key] < 1)
+                if (game.Categories[category.Key] < 1)
                 {
-                    game._categories[category.Key] = 1;
+                    game.Categories[category.Key] = 1;
                 }
-                if (game._categories[category.Key] > (101 - game._categories.Count))
+                if (game.Categories[category.Key] > (101 - game.Categories.Count))
                 {
-                    game._categories[category.Key] = (101 - game._categories.Count);
+                    game.Categories[category.Key] = (101 - game.Categories.Count);
                 }
             }
             this.Anounce(id);
