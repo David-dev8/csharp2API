@@ -5,6 +5,8 @@
     /// </summary>
     public class QuestionDTO
     {
+        public int Id { get; set; }
+
         public string Content { get; set; }
 
         public char RightAnswer { get; set; }
@@ -13,8 +15,9 @@
 
         public CategoryDTO? Category { get; set; }
 
-        public QuestionDTO(string content, char rightAnswer, IEnumerable<AnswerDTO> possibilities)
+        public QuestionDTO(int id, string content, char rightAnswer, IEnumerable<AnswerDTO> possibilities)
         {
+            Id = id;
             Content = content;
             RightAnswer = rightAnswer;
             Possibilities = possibilities;

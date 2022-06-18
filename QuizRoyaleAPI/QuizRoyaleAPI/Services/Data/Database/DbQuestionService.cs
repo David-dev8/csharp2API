@@ -34,6 +34,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
 
             Question randomQuestion = _context.Questions.Where(q => q.CategoryId == categoryId).Skip(randomRow).First();
             return new QuestionDTO(
+                randomQuestion.Id,
                 randomQuestion.Content,
                 randomQuestion.RightAnswer,
                 randomQuestion.Possibilities.Select(p => new AnswerDTO(

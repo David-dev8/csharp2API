@@ -33,7 +33,7 @@ namespace QuizRoyaleAPI.Hubs
                     State.CurrentGame.Join(username, Context.ConnectionId);
 
                     // Stuurt alleen een melding naar de client die wil joinen
-                    int playersLeft = State.CurrentGame._minimumPlayers - State.CurrentGame.GetAmountOfPlayers();
+                    int playersLeft = State.CurrentGame.MinimumPlayers - State.CurrentGame.GetAmountOfPlayers();
                     if (playersLeft > 0)
                     {
                         string message = "Welkom, we wachten nog op " + playersLeft + " spelers";

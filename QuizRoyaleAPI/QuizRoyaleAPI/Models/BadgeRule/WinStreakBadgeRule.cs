@@ -18,7 +18,7 @@
                 }
 
                 streak++;
-                if(maxStreak > streak)
+                if(streak > maxStreak)
                 {
                     maxStreak = streak;
                 }

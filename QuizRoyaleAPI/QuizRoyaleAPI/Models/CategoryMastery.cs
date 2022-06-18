@@ -12,5 +12,11 @@
         public int AmountOfQuestions { get; set; }
 
         public int QuestionsRight { get; set; }
+
+        public CategoryMastery(int amountOfQuestions, int questionsRight)
+        {
+            AmountOfQuestions = amountOfQuestions;
+            QuestionsRight = questionsRight;
+        }
     }
 }

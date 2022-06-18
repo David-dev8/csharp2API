@@ -39,6 +39,14 @@ namespace QuizRoyaleAPI.Services.Data
         public void RegisterResult(string username, Mode mode, int position);
 
         /// <summary>
+        /// Legt een antwoord voor een speler vast in zijn mastery
+        /// </summary>
+        /// <param name="username">De username van de speler waarvan je het antwoord wilt vastleggen</param>
+        /// <param name="isCorrect">Of het antwoord goed is of niet</param>
+        /// <param name="questionId">Het id van de vraag waar een antwoord op is gegeven</param>
+        public void RegisterAnswer(string username, bool isCorrect, int questionId);
+
+        /// <summary>
         /// Removed een item van een spelers inventory
         /// </summary>
         /// <param name="username">De username van de speler waarvan je de item wilt removen</param>

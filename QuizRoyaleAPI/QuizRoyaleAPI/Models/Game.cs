@@ -11,15 +11,10 @@ namespace QuizRoyaleAPI.Models
     /// </summary>
     public class Game
     {
-        private QuestionDTO _currentQuestion;
         private IDictionary<string, InGamePlayerDTO> _allPlayers;
         private IDictionary<InGamePlayerDTO, char> _allResponses;
-        public System.Timers.Timer _timer { get; set; }
         private System.Timers.Timer _startDelayTimer;
         private System.Timers.Timer _coolDownTimer;
-        public int _minimumPlayers { get; } = 11;
-        public int _maximumPlayers { get; } = 2000;
-        public IDictionary<CategoryDTO, float> _categories { get; set; }
         private BoosterFactory _boosterFactory;
         private int _questionTimeInMili;
         private bool _inProgress;
@@ -27,11 +22,16 @@ namespace QuizRoyaleAPI.Models
         private const int QUESTION_XP = 75;
         private const int WIN_COINS = 200;
         private const int QUESTION_COINS = 25;
-        private int _miliStarted;
+        private long _miliStarted;
+
+        public QuestionDTO CurrentQuestion { get; set; }
+        public IDictionary<CategoryDTO, float> _categories { get; set; }
+        public int MinimumPlayers { get; } = 11;
+        public int MaximumPlayers { get; } = 2000;
+        public System.Timers.Timer Timer { get; set; }
 
         public Game(int questionTimeInMili)
         {
-            this._currentQuestion = null;
             this._allPlayers = new Dictionary<string, InGamePlayerDTO>();
             this._allResponses = new Dictionary<InGamePlayerDTO, char>();
             this._categories = new Dictionary<CategoryDTO, float>();
@@ -60,12 +60,12 @@ namespace QuizRoyaleAPI.Models
             // Create a timer with a variable interval.
             if(State.CurrentGame != null)
             {
-                _timer = new System.Timers.Timer(questionTime);
+                Timer = new System.Timers.Timer(questionTime);
                 // Hook up the Tick event for the timer. 
-                _timer.Elapsed += this.NextQuestion;
-                _timer.AutoReset = false;
-                _timer.Enabled = true;
-                _miliStarted = DateTime.Now.Millisecond;
+                Timer.Elapsed += this.NextQuestion;
+                Timer.AutoReset = false;
+                Timer.Enabled = true;
+                _miliStarted = GetCurrentMilis();
             }
         }
 
@@ -114,7 +114,7 @@ namespace QuizRoyaleAPI.Models
         /// <param name="e">EventArgs</param>
         private void NextQuestion(object? source, ElapsedEventArgs e)
         {
-            if (this._currentQuestion != null)
+            if (this.CurrentQuestion != null)
             {
                 this.SendResultsFromLastQuestion();
             }
@@ -133,8 +133,8 @@ namespace QuizRoyaleAPI.Models
                     using (var scope = State.ServiceProvider.CreateScope())
                     {
                         var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
-                        this._currentQuestion = _QuestionService.GetQuestionByCategoryId(cat.Id); // Get random element from array
-                        _currentQuestion.Category = cat;
+                        this.CurrentQuestion = _QuestionService.GetQuestionByCategoryId(cat.Id);
+                        CurrentQuestion.Category = cat;
                         this.SendNewQuestion();
                         this.SetCooldownTimer();
                         break;
@@ -149,8 +149,8 @@ namespace QuizRoyaleAPI.Models
         /// <returns>stuurt de QuestionDTO op naar alle clients</returns>
         public async Task SendNewQuestion()
         {
-            await State.GetHubContext().Clients.All.SendAsync("newQuestion", _currentQuestion);// Documented
-            Console.WriteLine("----------------> " + _currentQuestion.RightAnswer + " is het goede antwoord <-----------------");
+            await State.GetHubContext().Clients.All.SendAsync("newQuestion", CurrentQuestion);// Documented
+            Console.WriteLine("----------------> " + CurrentQuestion.RightAnswer + " is het goede antwoord <-----------------");
         }
 
         /// <summary>
@@ -161,25 +161,27 @@ namespace QuizRoyaleAPI.Models
             ICollection<string> playersToEliminate = new List<string>();
             if (this._allResponses.Count > 0)
             {
-                foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
+                using (var scope = State.ServiceProvider.CreateScope())
                 {
-                    if (_allResponses.ContainsKey(player.Value)
-                        && (_allResponses[player.Value] == this._currentQuestion.RightAnswer || this._allResponses[player.Value] == '*'))
-                    { 
-                        using (var scope = State.ServiceProvider.CreateScope())
-                        {
-                            var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
-                            _PlayerService.GiveRewards(player.Value.Username, QUESTION_XP, QUESTION_COINS);
-                        }
-                        this.SendResultToPlayer(player.Key, true, QUESTION_XP, QUESTION_COINS);
-                        Console.WriteLine(player.Value.Username + " heeft het goed!");
-                    }
-                    else
+                    var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
+
+                    foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
                     {
-                        this.SendResultToPlayer(player.Key, false, 0, 0);
-                        Console.WriteLine(player.Value.Username + " heeft geen goed antwoord gegegeven!");
-                        playersToEliminate.Add(player.Key);
-                        //this.EliminatePlayer(player.Key);
+                        if (_allResponses.ContainsKey(player.Value)
+                            && (_allResponses[player.Value] == this.CurrentQuestion.RightAnswer || this._allResponses[player.Value] == '*'))
+                        {
+                            _PlayerService.RegisterAnswer(player.Value.Username, true, CurrentQuestion.Id);
+                            _PlayerService.GiveRewards(player.Value.Username, QUESTION_XP, QUESTION_COINS);
+                            this.SendResultToPlayer(player.Key, true, QUESTION_XP, QUESTION_COINS);
+                            Console.WriteLine(player.Value.Username + " heeft het goed!");
+                        }
+                        else
+                        {
+                            _PlayerService.RegisterAnswer(player.Value.Username, false, CurrentQuestion.Id);
+                            this.SendResultToPlayer(player.Key, false, 0, 0);
+                            Console.WriteLine(player.Value.Username + " heeft geen goed antwoord gegegeven!");
+                            playersToEliminate.Add(player.Key);
+                        }
                     }
                 }
                 Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn voor de purge");
@@ -253,12 +255,12 @@ namespace QuizRoyaleAPI.Models
         /// </summary>
         private void RemoveTimers()
         {
-            _timer.Elapsed -= NextQuestion;
-            _timer.Elapsed -= StartNextQuestion;
+            Timer.Elapsed -= NextQuestion;
+            Timer.Elapsed -= StartNextQuestion;
             _startDelayTimer.Elapsed -= startGame;
-            _timer.Stop();
+            Timer.Stop();
             _startDelayTimer.Stop();
-            _timer.Dispose();
+            Timer.Dispose();
             _startDelayTimer.Dispose();
         }
 
@@ -287,8 +289,14 @@ namespace QuizRoyaleAPI.Models
             if (!this._allResponses.ContainsKey(player))
             { 
                 this._allResponses.Add(player, id);
-                await State.GetHubContext().Clients.All.SendAsync("playerAnswered", player, (DateTime.Now.Millisecond - _miliStarted) / 1000.0);
+                await State.GetHubContext().Clients.All.SendAsync("playerAnswered", player, (GetCurrentMilis() - _miliStarted) / 1000.0);
             }
+        }
+
+        // Haalt de huidige timestamp in milliseconden op
+        private long GetCurrentMilis()
+        {
+            return DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
         /// <summary>
@@ -332,7 +340,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>True als een spel gestart kan worden, anders false</returns>
         public bool CanStart()
         {
-            if (this._allPlayers.Count >= this._minimumPlayers && this._allPlayers.Count <= this._maximumPlayers && this._inProgress == false)
+            if (this._allPlayers.Count >= this.MinimumPlayers && this._allPlayers.Count <= this.MaximumPlayers && this._inProgress == false)
             {
                 return true;
             }
@@ -359,7 +367,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>True als de speler kan joinen, anders false</returns>
         public bool CanJoin()
         {
-            if (this._allPlayers.Count < this._maximumPlayers && this._inProgress == false)
+            if (this._allPlayers.Count < this.MaximumPlayers && this._inProgress == false)
             {
                 return true;
             }

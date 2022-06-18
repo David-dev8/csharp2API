@@ -87,11 +87,16 @@ namespace QuizRoyaleAPI.Services.Data.Database
 
             return new InGamePlayerDTO(
                 player.Username,
-                GetSingleItemByType(items, ItemType.TITLE)?.Picture,
+                GetSingleItemByType(items, ItemType.TITLE)?.Name,
                 GetSingleItemByType(items, ItemType.PROFILE_PICTURE)?.Picture,
                 GetSingleItemByType(items, ItemType.BORDER)?.Picture,
                 GetItemsByType(items, ItemType.BOOST)
             );
+        }
+
+        private Player GetPlayerFromDB(string username)
+        {
+            return _context.Players.Where(p => p.Username == username).Single();
         }
 
         private Player GetPlayerFromDB(int userId)
@@ -147,11 +152,48 @@ namespace QuizRoyaleAPI.Services.Data.Database
 
         public void removeItem(string username, string itemName)
         {
-            Player? player = _context.Players.Where(p => p.Username == username).FirstOrDefault();
+            Player player = GetPlayerFromDB(username);
             Item? item = _context.Items.Where(p => p.Name == itemName).FirstOrDefault();
             AcquiredItem? acquiredItem = player.AcquiredItems.Where(i => i.ItemId == item.Id).FirstOrDefault();
             player.AcquiredItems.Remove(acquiredItem);
             _context.SaveChanges();
+        }
+
+        public void RegisterAnswer(string username, bool isCorrect, int questionId)
+        {
+            Player player = GetPlayerFromDB(username);
+            Category category = GetCategoryFromDB(questionId);
+            CategoryMastery? mastery = player.Mastery.Where(m => m.CategoryId == category.Id).FirstOrDefault();
+            if(mastery != null) 
+            {
+                mastery.AmountOfQuestions++;
+                if(isCorrect)
+                {
+                    mastery.QuestionsRight++;
+                }
+            }
+            else
+            {
+                player.Mastery.Add(new CategoryMastery(1, isCorrect ? 1 : 0)
+                {
+                    CategoryId = category.Id,
+                });
+            }
+            _context.SaveChanges();
+        }
+
+        private Category GetCategoryFromDB(int questionId)
+        {
+            int? categoryId = _context.Questions.Find(questionId)?.CategoryId;
+            if(categoryId != null)
+            {
+                Category? category = _context.Categories.Find(categoryId);
+                if(category != null)
+                {
+                    return category;
+                }
+            }
+            throw new CategoryNotFoundException();
         }
     }
 }
