@@ -92,12 +92,14 @@ namespace QuizRoyaleAPI.Services.Data.Database
             IList<Badge> earnedBadges = player.Badges.ToList();
             IList<Badge> badges = _context.Badges.ToList();
 
-            return badges.Select(b => new BadgeDTO(
+            IList<BadgeDTO> allEarnedBadges = badges.Select(b => new BadgeDTO(
                 b.Name,
                 b.Picture,
                 b.Description,
-                earnedBadges.Contains(b) || CanBeRewarded(b, player)
-            ));
+                earnedBadges.Contains(b) || Reward(b, player)
+            )).ToList();
+            _context.SaveChanges();
+            return allEarnedBadges;
         }
 
         private Player GetPlayer(int userId)
@@ -121,6 +123,16 @@ namespace QuizRoyaleAPI.Services.Data.Database
                 int position = _context.Players.OrderByDescending(p => p.AmountOfWins).ToList().FindIndex((p) => p.Id == userId);
                 return (int)((double)100 * position / _context.Players.Count());
             }
+        }
+
+        private bool Reward(Badge badge, Player player)
+        {
+            bool canBeRewarded = CanBeRewarded(badge, player);
+            if(canBeRewarded)
+            {
+                player.Badges.Add(badge);
+            }
+            return canBeRewarded;
         }
 
         private bool CanBeRewarded(Badge badge, Player player)
