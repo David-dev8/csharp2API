@@ -3,6 +3,7 @@ using QuizRoyaleAPI.Services.Data;
 using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using QuizRoyaleAPI.Enums;
 
 namespace QuizRoyaleAPI.Models
 {

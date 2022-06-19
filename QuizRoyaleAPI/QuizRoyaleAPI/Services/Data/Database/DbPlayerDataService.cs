@@ -3,6 +3,7 @@ using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
 using QuizRoyaleAPI.Models.BadgeRule;
+using QuizRoyaleAPI.Enums;
 
 namespace QuizRoyaleAPI.Services.Data.Database
 {
@@ -12,7 +13,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
     public class DbPlayerDataService : IPlayerDataService
     {
         private readonly QuizRoyaleDbContext _context;
-        private readonly BadgeRuleFactory _badgeRuleFactory; // todo dependency injection? addScoped voor GameFactory?
+        private readonly BadgeRuleFactory _badgeRuleFactory;
 
         public DbPlayerDataService(QuizRoyaleDbContext context)
         {

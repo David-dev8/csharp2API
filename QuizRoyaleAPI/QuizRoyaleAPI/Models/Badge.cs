@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using QuizRoyaleAPI.Enums;
 
 namespace QuizRoyaleAPI.Models
 {
@@ -33,15 +34,5 @@ namespace QuizRoyaleAPI.Models
             Gradation = gradation;
             Players = new List<Player>();
         }
-    }
-
-    // todo enum string waarde?
-    public enum BadgeType
-    {
-        WINSTREAK,
-        TOTAL_WINS,
-        ROYALE_PLAYED,
-        ITEMS_UNLOCKED,
-        MASTERY
     }
 }

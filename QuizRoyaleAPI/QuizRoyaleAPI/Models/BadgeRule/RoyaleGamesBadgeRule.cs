@@ -1,4 +1,6 @@
-﻿namespace QuizRoyaleAPI.Models.BadgeRule
+﻿using QuizRoyaleAPI.Enums;
+
+namespace QuizRoyaleAPI.Models.BadgeRule
 {
     /// <summary>
     /// Dit is de badgeRule voor de Royal Games Badge

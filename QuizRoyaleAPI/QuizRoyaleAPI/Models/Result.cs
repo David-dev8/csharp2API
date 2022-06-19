@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using QuizRoyaleAPI.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuizRoyaleAPI.Models
 {
@@ -12,7 +13,7 @@ namespace QuizRoyaleAPI.Models
         public DateTime Time { get; set; }
 
         [MaxLength(100)]
-        public Mode Mode { get; set; } // todo mode als string
+        public Mode Mode { get; set; }
 
         public int Position { get; set; }
 
@@ -24,10 +25,5 @@ namespace QuizRoyaleAPI.Models
             Position = position;
             Time = DateTime.Now;
         }
-    }
-
-    public enum Mode
-    {
-        QUIZ_ROYALE
     }
 }

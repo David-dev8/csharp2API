@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using QuizRoyaleAPI.Enums;
 using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.DataAccess

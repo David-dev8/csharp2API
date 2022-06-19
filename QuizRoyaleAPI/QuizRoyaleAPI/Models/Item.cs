@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using QuizRoyaleAPI.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuizRoyaleAPI.Models
 {
@@ -34,19 +35,5 @@ namespace QuizRoyaleAPI.Models
             PaymentType = paymentType;
             PlayersWhoAcquired = new List<AcquiredItem>();
         }
-    }
-
-    public enum ItemType // todo aparte file?
-    {
-        BORDER,
-        PROFILE_PICTURE,
-        TITLE,
-        BOOST
-    }
-
-    public enum PaymentType
-    {
-        XP,
-        COINS
     }
 }

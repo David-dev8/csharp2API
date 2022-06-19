@@ -1,5 +1,6 @@
 ﻿using QuizRoyaleAPI.DataAccess;
 using QuizRoyaleAPI.DTOs;
+using QuizRoyaleAPI.Enums;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
 

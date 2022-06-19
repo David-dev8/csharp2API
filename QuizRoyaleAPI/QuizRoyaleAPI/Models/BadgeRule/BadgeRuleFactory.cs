@@ -1,4 +1,5 @@
-﻿using QuizRoyaleAPI.Exceptions;
+﻿using QuizRoyaleAPI.Enums;
+using QuizRoyaleAPI.Exceptions;
 
 namespace QuizRoyaleAPI.Models.BadgeRule
 {
@@ -15,7 +16,6 @@ namespace QuizRoyaleAPI.Models.BadgeRule
         /// <exception cref="UnsupportedRuleException">Deze exceptie wordt gegooid zodra er geen badgeRule kan worden gevonden dat overeenkomt met de gegeven type</exception>
         public IBadgeRule GetRule(BadgeType type)
         {
-            // todo factory met enums of strings?
             return type switch
             {
                 BadgeType.WINSTREAK => new WinStreakBadgeRule(),
