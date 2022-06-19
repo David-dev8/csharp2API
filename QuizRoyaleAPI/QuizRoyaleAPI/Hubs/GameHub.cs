@@ -39,7 +39,7 @@ namespace QuizRoyaleAPI.Hubs
                         string message = playersLeft == 0 ? "The game will start soon" : 
                             "Welcome, we are currently waiting for " + playersLeft + " players";
                         IList<InGamePlayerDTO> players = State.CurrentGame.GetPlayerNames();
-                        IList<MasteryDTO> categories = State.CurrentGame.getCategories();
+                        IList<CategoryIntensityDTO> categories = State.CurrentGame.getCategories();
                         await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
                     }
 
@@ -54,13 +54,13 @@ namespace QuizRoyaleAPI.Hubs
                 catch 
                 {
                     // Stuurt alleen een melding naar de client die wil joinen
-                    await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<MasteryDTO>());
+                    await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<CategoryIntensityDTO>());
                 }
             }
             else 
             {
                 // Stuurt alleen een melding naar de client die wil joinen
-                await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<MasteryDTO>()) ;
+                await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<CategoryIntensityDTO>()) ;
             }
         }
 

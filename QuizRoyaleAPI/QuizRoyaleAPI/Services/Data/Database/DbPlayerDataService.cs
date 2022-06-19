@@ -43,7 +43,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
             );
         }
 
-        public IEnumerable<MasteryDTO> GetMastery(int userId)
+        public IEnumerable<CategoryIntensityDTO> GetMastery(int userId)
         {
             return _context.Categories.ToList().GroupJoin(GetPlayer(userId).Mastery.ToList(),
                 c => c.Id,
@@ -55,7 +55,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
                 }
             ).SelectMany(
                 m => m.Rates.DefaultIfEmpty(),
-                (c, cm) => new MasteryDTO(
+                (c, cm) => new CategoryIntensityDTO(
                     new CategoryDTO(
                         c.Category.Id,
                         c.Category.Name,

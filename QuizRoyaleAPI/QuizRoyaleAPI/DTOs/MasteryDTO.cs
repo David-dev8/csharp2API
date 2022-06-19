@@ -1,17 +1,17 @@
 ﻿namespace QuizRoyaleAPI.DTOs
 {
     /// <summary>
-    /// MasteryDTO, Dit is een DTO object voor een Mastery
+    /// CategoryIntensityDTO, Dit is een DTO object voor een combinatie van een Category met een intensiteitsniveau, wat een percentage tussen 0 en 100 is.
     /// </summary>
-    public class MasteryDTO
+    public class CategoryIntensityDTO
     {
         public CategoryDTO Category { get; set; }
-        public double Mastery { get; set; }
+        public double Intensity { get; set; }
 
-        public MasteryDTO(CategoryDTO category, double mastery)
+        public CategoryIntensityDTO(CategoryDTO category, double intensity)
         {
             Category = category;
-            Mastery = mastery;
+            Intensity = intensity;
         }
     }
 }

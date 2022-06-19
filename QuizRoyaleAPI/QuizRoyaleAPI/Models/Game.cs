@@ -479,12 +479,12 @@ namespace QuizRoyaleAPI.Models
         /// Geeft alle categories in de game op als masteryDTO's, omdat je geen Dictionaries kan sturen
         /// </summary>
         /// <returns>Een collectie van MasteryDTO's</returns>
-        public IList<MasteryDTO> getCategories()
+        public IList<CategoryIntensityDTO> getCategories()
         {
-            IList<MasteryDTO> list = new List<MasteryDTO>();
+            IList<CategoryIntensityDTO> list = new List<CategoryIntensityDTO>();
             foreach (KeyValuePair<CategoryDTO, float> cat in this.Categories)
             {
-                list.Add(new MasteryDTO(cat.Key, cat.Value));
+                list.Add(new CategoryIntensityDTO(cat.Key, cat.Value));
             }
             return list;
         }

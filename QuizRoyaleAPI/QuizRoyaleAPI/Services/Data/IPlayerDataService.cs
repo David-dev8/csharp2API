@@ -27,7 +27,7 @@ namespace QuizRoyaleAPI.Services.Data
         /// </summary>
         /// <param name="userId">De userID van de speler waarvan je de masteries op wilt halen</param>
         /// <returns>Een collectie van MasteryDTO's</returns>
-        public IEnumerable<MasteryDTO> GetMastery(int userId);
+        public IEnumerable<CategoryIntensityDTO> GetMastery(int userId);
 
         /// <summary>
         /// Haalt de badges op van een speler
