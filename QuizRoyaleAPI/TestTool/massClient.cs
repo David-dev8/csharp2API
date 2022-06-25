@@ -8,49 +8,49 @@ using System.Threading.Tasks;
 
 namespace TestTool
 {
-    public class massClient
+    public class MassClient
     {
-        private HubConnection connection;
-        private int totalPlayers;
+        private HubConnection _connection;
+        private int _totalPlayers;
 
-        public massClient(int totalPlayers)
+        public MassClient(int totalPlayers)
         {
-            this.totalPlayers = totalPlayers;
-            connection = new HubConnectionBuilder()
+            this._totalPlayers = totalPlayers;
+            _connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:5264/GameHub")
                 .Build();
 
-            connection.On("StartQuestion", () =>
+            _connection.On("StartQuestion", () =>
             {
-                awnserRandomly();
+                AnswerRandomly();
             });
 
-            connection.On("gameOver", () =>
+            _connection.On("gameOver", () =>
             {
-                connection.DisposeAsync();
+                _connection.DisposeAsync();
             });
         }
 
-        public async Task join(string name)
+        public async Task Join(string name)
         {
             try
             {
-                await connection.StartAsync();
-                await connection.InvokeAsync("join", name);
+                await _connection.StartAsync();
+                await _connection.InvokeAsync("Join", name);
             }
             catch (Exception ex)
             {
             }
         }
 
-        public async Task awnserRandomly()
+        public async Task AnswerRandomly()
         {
             Random random = new Random();
-            Thread.Sleep(random.Next(10000 / totalPlayers));
+            Thread.Sleep(random.Next(10000 / _totalPlayers));
             int randomInt = random.Next(0, 4);
             char[] charArray = new char[] { 'A', 'B', 'C', 'D' };
             char randomChar = charArray[randomInt];
-            await connection.InvokeAsync("answerQuestion", randomChar); ;
+            await _connection.InvokeAsync("AnswerQuestion", randomChar); ;
         }
     }
 }

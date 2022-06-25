@@ -23,7 +23,7 @@ namespace TestTool
     public partial class MainWindow : Window
     {
         HubConnection connection;
-        IList<massClient> holder;
+        IList<MassClient> holder;
         public MainWindow()
         {
             InitializeComponent();
@@ -56,11 +56,11 @@ namespace TestTool
         private async void joinButton_Copy_Click(object sender, RoutedEventArgs e)
         {
             int playersToAdd = int.Parse(((Button)sender).Tag.ToString());
-            holder = new List<massClient>();
+            holder = new List<MassClient>();
             for (int j = 0; j < playersToAdd; j++)
             {
-                massClient mockClient = new massClient(playersToAdd);
-                await mockClient.join((j % 10).ToString());
+                MassClient mockClient = new MassClient(playersToAdd);
+                await mockClient.Join((j % 10).ToString());
                 holder.Add(mockClient);
                 Thread.Sleep(100);
             }
@@ -69,11 +69,11 @@ namespace TestTool
         private async void joinButton_specific_Click(object sender, RoutedEventArgs e)
         {
             int playersToAdd = (int)amountSlider.Value;
-            holder = new List<massClient>();
+            holder = new List<MassClient>();
             for (int j = 0; j < playersToAdd; j++)
             {
-                massClient mockClient = new massClient(playersToAdd);
-                await mockClient.join((j % 10).ToString());
+                MassClient mockClient = new MassClient(playersToAdd);
+                await mockClient.Join((j % 10).ToString());
                 holder.Add(mockClient);
                 Thread.Sleep(100);
             }

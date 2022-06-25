@@ -6,7 +6,7 @@ using QuizRoyaleAPI.Models;
 namespace QuizRoyaleAPI.Services.Data.Database
 {
     /// <summary>
-    /// DbQuestionService, Een implementatie van de QuestionService die comuniceerd met een Database
+    /// DbQuestionService, Een implementatie van de QuestionService die communiceert met een database
     /// </summary>
     public class DbQuestionService: IQuestionService
     {

@@ -1,7 +1,7 @@
 ﻿namespace QuizRoyaleAPI.Models
 {
     /// <summary>
-    /// Dit is het AcquiredItem object
+    /// Dit is het acquiredItem object.
     /// </summary>
     public class AcquiredItem
     {

@@ -14,7 +14,7 @@ namespace QuizRoyaleAPI.Models.Boosters
         /// </summary>
         /// <param name="game">De game waarop deze booster moet worden gebruikt</param>
         /// <param name="options">De conectieID van de speler die de boost gebruikt</param>
-        public void use(Game game, string options)
+        public void Use(Game game, string options)
         {
             Random random = new Random();
             IList<AnswerDTO> wrongAnswers = game.CurrentQuestion.Possibilities

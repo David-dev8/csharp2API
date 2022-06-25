@@ -9,16 +9,16 @@ using QuizRoyaleAPI.Services.Data;
 namespace QuizRoyaleAPI.Hubs
 {
     /// <summary>
-    /// De GameHub, Dit is de hub waarin de game plaatsvindt
+    /// De GameHub, Dit is de hub waarin de game plaatsvindt.
     /// </summary>
     public class GameHub : Hub
     {
         /// <summary>
-        /// Deze methode kan worden aangeroepen door een client om te proberen te joinen
+        /// Deze methode kan worden aangeroepen door een client om te proberen te joinen.
         /// </summary>
-        /// <param name="username">De username van de client die wil joinen</param>
-        /// <returns>Een joinstatus event naar de client</returns>
-        public async Task join(string username)
+        /// <param name="username">De username van de client die wil joinen.</param>
+        /// <returns>Een joinstatus event naar de client.</returns>
+        public async Task Join(string username)
         {
             Console.WriteLine(username + " wil Joinen");
             if (State.CurrentGame == null)
@@ -39,7 +39,7 @@ namespace QuizRoyaleAPI.Hubs
                         string message = playersLeft == 0 ? "The game will start soon" : 
                             "Welcome, we are currently waiting for " + playersLeft + " players";
                         IList<InGamePlayerDTO> players = State.CurrentGame.GetPlayerNames();
-                        IList<CategoryIntensityDTO> categories = State.CurrentGame.getCategories();
+                        IList<CategoryIntensityDTO> categories = State.CurrentGame.GetCategories();
                         await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
                     }
 
@@ -65,33 +65,33 @@ namespace QuizRoyaleAPI.Hubs
         }
 
         /// <summary>
-        /// Deze methode kan worden aangeroepen door de client om een spel handmatig te verlaten
+        /// Deze methode kan worden aangeroepen door de client om een spel handmatig te verlaten.
         /// </summary>
-        /// <returns>Een gameOver event naar de player die wil leaven</returns>
-        public async Task leave()
+        /// <returns>Een gameOver event naar de player die wil leaven.</returns>
+        public async Task Leave()
         {
             await State.CurrentGame.EliminatePlayer(Context.ConnectionId);
         }
 
 
         /// <summary>
-        /// Deze methode kan worden aangeroepen door de client om een vraag te beantwoorden
+        /// Deze methode kan worden aangeroepen door de client om een vraag te beantwoorden.
         /// </summary>
-        /// <param name="AwnserID">De ID van het antwoord dat de client geeft</param>
+        /// <param name="awnserID">De ID van het antwoord dat de client geeft.</param>
         /// <returns>Void</returns>
-        public async Task answerQuestion(char AwnserID)
+        public async Task AnswerQuestion(char awnserID)
         {
-            Console.WriteLine(Context.ConnectionId + " wil " + AwnserID + " antwoorden!");
-            State.CurrentGame.AnswerQuestion(AwnserID, Context.ConnectionId);
+            Console.WriteLine(Context.ConnectionId + " wil " + awnserID + " antwoorden!");
+            State.CurrentGame.AnswerQuestion(awnserID, Context.ConnectionId);
         }
 
         /// <summary>
-        /// Deze methode kan worden aangeroepen door de client om een boost te gebruiken
+        /// Deze methode kan worden aangeroepen door de client om een boost te gebruiken.
         /// </summary>
-        /// <param name="type">De type van het boost die de speler wil gebruiken</param>
-        /// <param name="options">De opties voor de boost, dit is alleen toepaselijk bij bepaalde boosts</param>
-        /// <returns>Afhankelijk van de boost die gebruikt wordt</returns>
-        public async Task useBoost(string type, string options)
+        /// <param name="type">De type van het boost die de speler wil gebruiken.</param>
+        /// <param name="options">De opties voor de boost, dit is alleen toepaselijk bij bepaalde boosts.</param>
+        /// <returns>Afhankelijk van de boost die gebruikt wordt.</returns>
+        public async Task UseBoost(string type, string options)
         {
             if (options == "")
             {

@@ -5,6 +5,6 @@
     /// </summary>
     public interface Booster
     {
-        public void use(Game game, string options);
+        public void Use(Game game, string options);
     }
 }
