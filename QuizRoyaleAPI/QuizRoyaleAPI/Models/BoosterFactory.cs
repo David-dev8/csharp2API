@@ -14,7 +14,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>Een Booster</returns>
         public Booster GetBooster(string boostername)
         {
-            switch (boostername)
+            switch(boostername)
             {
                 case "Category increase":
                     return new CategoryIncreaseBooster();

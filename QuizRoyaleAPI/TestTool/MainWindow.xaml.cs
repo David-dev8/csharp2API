@@ -38,7 +38,7 @@ namespace TestTool
                 messagesList.Items.Add("Connection succesfully started");
                 connectButton.IsEnabled = false;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 messagesList.Items.Add(ex.Message);
             }
@@ -48,7 +48,7 @@ namespace TestTool
         {
             int playersToAdd = int.Parse(((Button)sender).Tag.ToString());
             holder = new List<MassClient>();
-            for (int j = 0; j < playersToAdd; j++)
+            for(int j = 0; j < playersToAdd; j++)
             {
                 MassClient mockClient = new MassClient(playersToAdd);
                 await mockClient.Join((j % 10).ToString());
@@ -61,7 +61,7 @@ namespace TestTool
         {
             int playersToAdd = (int)amountSlider.Value;
             holder = new List<MassClient>();
-            for (int j = 0; j < playersToAdd; j++)
+            for(int j = 0; j < playersToAdd; j++)
             {
                 MassClient mockClient = new MassClient(playersToAdd);
                 await mockClient.Join((j % 10).ToString());

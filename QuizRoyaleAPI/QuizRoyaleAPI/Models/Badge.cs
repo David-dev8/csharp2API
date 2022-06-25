@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using QuizRoyaleAPI.Enums;
+﻿using QuizRoyaleAPI.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuizRoyaleAPI.Models
 {

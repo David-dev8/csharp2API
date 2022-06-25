@@ -1,8 +1,8 @@
-﻿using System.Timers;
-using QuizRoyaleAPI.Services.Data;
+﻿using Microsoft.AspNetCore.SignalR;
 using QuizRoyaleAPI.DTOs;
-using Microsoft.AspNetCore.SignalR;
 using QuizRoyaleAPI.Enums;
+using QuizRoyaleAPI.Services.Data;
+using System.Timers;
 
 namespace QuizRoyaleAPI.Models
 {
@@ -32,13 +32,13 @@ namespace QuizRoyaleAPI.Models
 
         public Game(int questionTimeInMili)
         {
-            this.CurrentQuestion = null;
-            this._allPlayers = new Dictionary<string, InGamePlayerDTO>();
-            this._allResponses = new Dictionary<InGamePlayerDTO, char>();
-            this.Categories = new Dictionary<CategoryDTO, float>();
-            this._boosterFactory = new BoosterFactory();
-            this._questionTimeInMili = questionTimeInMili;
-            this._inProgress = false;
+            CurrentQuestion = null;
+            _allPlayers = new Dictionary<string, InGamePlayerDTO>();
+            _allResponses = new Dictionary<InGamePlayerDTO, char>();
+            Categories = new Dictionary<CategoryDTO, float>();
+            _boosterFactory = new BoosterFactory();
+            _questionTimeInMili = questionTimeInMili;
+            _inProgress = false;
 
             RegisterCategories();
         }
@@ -46,11 +46,11 @@ namespace QuizRoyaleAPI.Models
         // Haal alle categorieën op en sla deze op.
         private void RegisterCategories()
         {
-            using (var scope = State.ServiceProvider.CreateScope())
+            using(var scope = State.ServiceProvider.CreateScope())
             {
                 var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
                 IEnumerable<CategoryDTO> categories = _QuestionService.GetCategories();
-                foreach (CategoryDTO cat in categories)
+                foreach(CategoryDTO cat in categories)
                 {
                     Categories.Add(cat, (float)100.0 / categories.Count());
                 }
@@ -67,7 +67,7 @@ namespace QuizRoyaleAPI.Models
             if(State.CurrentGame != null)
             {
                 QuestionTimer = new System.Timers.Timer(questionTime);
-                QuestionTimer.Elapsed += this.NextQuestion;
+                QuestionTimer.Elapsed += NextQuestion;
                 QuestionTimer.AutoReset = false;
                 QuestionTimer.Enabled = true;
                 _miliStarted = GetCurrentMilis();
@@ -77,13 +77,13 @@ namespace QuizRoyaleAPI.Models
         /// <summary>
         /// Start een timer voor de cooldown tussen vragen in
         /// </summary>
-        private void SetCooldownTimer() 
+        private void SetCooldownTimer()
         {
-            if (State.CurrentGame != null)
+            if(State.CurrentGame != null)
             {
                 // Create a timer with a variable interval.
                 _coolDownTimer = new System.Timers.Timer(10000); // 10 seconden
-                _coolDownTimer.Elapsed += this.StartNextQuestion;
+                _coolDownTimer.Elapsed += StartNextQuestion;
                 _coolDownTimer.AutoReset = false;
                 _coolDownTimer.Enabled = true;
             }
@@ -95,16 +95,16 @@ namespace QuizRoyaleAPI.Models
         /// <param name="source">source</param>
         /// <param name="e">eventArgs</param>
         private void StartNextQuestion(Object source, ElapsedEventArgs e)
-        { 
-            this.SetTimer(this._questionTimeInMili);
-            this.NotifyNextQuestion();
+        {
+            SetTimer(_questionTimeInMili);
+            NotifyNextQuestion();
         }
 
         /// <summary>
         /// Laat iedereen weten dat de volgende vraag begint.
         /// </summary>
         /// <returns></returns>
-        private async Task NotifyNextQuestion() 
+        private async Task NotifyNextQuestion()
         {
             await State.GetHubContext().Clients.All.SendAsync("StartQuestion");// Documented
         }
@@ -119,21 +119,21 @@ namespace QuizRoyaleAPI.Models
         private void NextQuestion(object? source, ElapsedEventArgs e)
         {
             Console.WriteLine("We gaan nu een nieuwe vraag kiezen");
-            if (this.CurrentQuestion != null)
+            if(CurrentQuestion != null)
             {
-                this.SendResultsFromLastQuestion();
+                SendResultsFromLastQuestion();
             }
 
             Random random = new Random();
             int randomInt = random.Next(100);
             float counter = 0;
 
-            foreach (CategoryDTO cat in this.Categories.Keys)
+            foreach(CategoryDTO cat in Categories.Keys)
             {
-                this._allResponses = new Dictionary<InGamePlayerDTO, char>();
-                counter += this.Categories[cat];
+                _allResponses = new Dictionary<InGamePlayerDTO, char>();
+                counter += Categories[cat];
 
-                if (randomInt <= counter)
+                if(randomInt <= counter)
                 {
                     SelectQuestion(cat);
                     break;
@@ -144,13 +144,13 @@ namespace QuizRoyaleAPI.Models
         // Selecteer een vraag voor de gegeven categorie
         private void SelectQuestion(CategoryDTO cat)
         {
-            using (var scope = State.ServiceProvider.CreateScope())
+            using(var scope = State.ServiceProvider.CreateScope())
             {
                 var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
-                this.CurrentQuestion = _QuestionService.GetQuestionByCategoryId(cat.Id);
+                CurrentQuestion = _QuestionService.GetQuestionByCategoryId(cat.Id);
                 CurrentQuestion.Category = cat;
-                this.SendNewQuestion();
-                this.SetCooldownTimer();
+                SendNewQuestion();
+                SetCooldownTimer();
             }
         }
 
@@ -172,15 +172,15 @@ namespace QuizRoyaleAPI.Models
             EliminatePlayers(GetPlayersToEliminate());
             Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn naa de purge");
 
-            State.GetHubContext().Clients.All.SendAsync("playersLeft", this._allPlayers.Values); // Doucumented
+            State.GetHubContext().Clients.All.SendAsync("playersLeft", _allPlayers.Values); // Doucumented
 
-            if (this._allPlayers.Count == 0)
+            if(_allPlayers.Count == 0)
             {
-                this.EndTie();
+                EndTie();
             }
-            else if (this._allPlayers.Count == 1) 
+            else if(_allPlayers.Count == 1)
             {
-                this.EndWin(this._allPlayers.First().Value.Username);
+                EndWin(_allPlayers.First().Value.Username);
             }
         }
 
@@ -188,13 +188,13 @@ namespace QuizRoyaleAPI.Models
         private void EliminatePlayers(ICollection<string> playersToEliminate)
         {
             int finalPosition = _allPlayers.Count;
-            using (var scope = State.ServiceProvider.CreateScope())
+            using(var scope = State.ServiceProvider.CreateScope())
             {
                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
-                foreach (string id in playersToEliminate)
+                foreach(string id in playersToEliminate)
                 {
                     _PlayerService.RegisterResult(_allPlayers[id].Username, Mode.QUIZ_ROYALE, finalPosition);
-                    this.EliminatePlayer(id);
+                    EliminatePlayer(id);
                 }
             }
         }
@@ -202,25 +202,25 @@ namespace QuizRoyaleAPI.Models
         // Haal alle spelers op die geëlimineerd moeten worden.
         private ICollection<string> GetPlayersToEliminate()
         {
-            if (this._allResponses.Count > 0)
+            if(_allResponses.Count > 0)
             {
                 ICollection<string> playersToEliminate = new List<string>();
-                using (var scope = State.ServiceProvider.CreateScope())
+                using(var scope = State.ServiceProvider.CreateScope())
                 {
                     var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
-                    foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
+                    foreach(KeyValuePair<string, InGamePlayerDTO> player in _allPlayers)
                     {
-                        if (HasToBeEliminated(player.Value))
+                        if(HasToBeEliminated(player.Value))
                         {
                             _PlayerService.RegisterAnswer(player.Value.Username, true, CurrentQuestion.Id);
                             _PlayerService.GiveRewards(player.Value.Username, QUESTION_XP, QUESTION_COINS);
-                            this.SendResultToPlayer(player.Key, true, QUESTION_XP, QUESTION_COINS);
+                            SendResultToPlayer(player.Key, true, QUESTION_XP, QUESTION_COINS);
                             Console.WriteLine(player.Value.Username + " heeft het goed!");
                         }
                         else
                         {
                             _PlayerService.RegisterAnswer(player.Value.Username, false, CurrentQuestion.Id);
-                            this.SendResultToPlayer(player.Key, false, 0, 0);
+                            SendResultToPlayer(player.Key, false, 0, 0);
                             Console.WriteLine(player.Value.Username + " heeft geen goed antwoord gegegeven!");
                             playersToEliminate.Add(player.Key);
                         }
@@ -239,7 +239,7 @@ namespace QuizRoyaleAPI.Models
         private bool HasToBeEliminated(InGamePlayerDTO player)
         {
             return _allResponses.ContainsKey(player)
-                && (_allResponses[player] == this.CurrentQuestion.RightAnswer || this._allResponses[player] == '*');
+                && (_allResponses[player] == CurrentQuestion.RightAnswer || _allResponses[player] == '*');
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns></returns>
         // Als alle spelers af zijn is er geen winner en is de game voorbij.
         public async Task EndTie()
-        { 
+        {
             State.CurrentGame = null;
             RemoveTimers();
             Console.WriteLine("gelijkspelgelijkspelgelijkspelgelijkspelgelijkspelgelijkspel");
@@ -263,7 +263,7 @@ namespace QuizRoyaleAPI.Models
         // Als er maar 1 speler over is dan wint deze speler.
         public async Task EndWin(string winnerName)
         {
-            using (var scope = State.ServiceProvider.CreateScope())
+            using(var scope = State.ServiceProvider.CreateScope())
             {
                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
                 _PlayerService.GiveRewards(winnerName, WIN_XP, WIN_COINS);
@@ -312,10 +312,10 @@ namespace QuizRoyaleAPI.Models
         /// <returns>Stuurt alle clients een event dat iemand heeft geantwoord met de tijd erbij.</returns>
         public async Task AnswerQuestion(char id, string conectionId)
         {
-            InGamePlayerDTO player = this._allPlayers[conectionId];
-            if (!this._allResponses.ContainsKey(player))
-            { 
-                this._allResponses.Add(player, id);
+            InGamePlayerDTO player = _allPlayers[conectionId];
+            if(!_allResponses.ContainsKey(player))
+            {
+                _allResponses.Add(player, id);
                 await State.GetHubContext().Clients.All.SendAsync("playerAnswered", player, (GetCurrentMilis() - _miliStarted) / 1000.0);
             }
         }
@@ -334,15 +334,15 @@ namespace QuizRoyaleAPI.Models
         /// <param name="conncectionId">De connectieID van de speler.</param>
         public void UseBoost(string type, string options, string conncectionId)
         {
-            using (var scope = State.ServiceProvider.CreateScope())
+            using(var scope = State.ServiceProvider.CreateScope())
             {
                 var playerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
-                playerService.removeItem(this._allPlayers[conncectionId].Username, type);
+                playerService.removeItem(_allPlayers[conncectionId].Username, type);
             }
             _boosterFactory.GetBooster(type).Use(this, options);
             Console.WriteLine("De kansen zijn Nu: ");
             float totaal = 0;
-            foreach (KeyValuePair<CategoryDTO, float> chance in this.Categories)
+            foreach(KeyValuePair<CategoryDTO, float> chance in Categories)
             {
                 Console.WriteLine(chance.Key.Name + " Heeft nu een kans van " + chance.Value + "%");
                 totaal += chance.Value;
@@ -357,7 +357,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>Geeft de geëlimineerde speler een event om te laten weten dat hij af is.</returns>
         public async Task EliminatePlayer(string playerID)
         {
-            this._allPlayers.Remove(playerID);
+            _allPlayers.Remove(playerID);
             await State.GetHubContext().Clients.Client(playerID).SendAsync("gameOver"); // Documented
         }
 
@@ -367,7 +367,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>True als een spel gestart kan worden, anders false.</returns>
         public bool CanStart()
         {
-            if (this._allPlayers.Count >= this.MinimumPlayers && this._allPlayers.Count <= this.MaximumPlayers && this._inProgress == false)
+            if(_allPlayers.Count >= MinimumPlayers && _allPlayers.Count <= MaximumPlayers && _inProgress == false)
             {
                 return true;
             }
@@ -380,12 +380,12 @@ namespace QuizRoyaleAPI.Models
         /// <returns>Stuurt alle clients een event dat het spel is gestart.</returns>
         public async Task Start()
         {
-            if (this.CanStart())
+            if(CanStart())
             {
                 Console.WriteLine("De game gaat nu starten");
                 await State.GetHubContext().Clients.All.SendAsync("start"); // Documented
-                this.SetTimer(10);
-                this._inProgress = true;
+                SetTimer(10);
+                _inProgress = true;
             }
         }
 
@@ -395,7 +395,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>True als de speler kan joinen, anders false.</returns>
         public bool CanJoin()
         {
-            if (this._allPlayers.Count < this.MaximumPlayers && this._inProgress == false)
+            if(_allPlayers.Count < MaximumPlayers && _inProgress == false)
             {
                 return true;
             }
@@ -409,18 +409,18 @@ namespace QuizRoyaleAPI.Models
         /// <param name="conectionId">De connectie van de speler die joint.</param>
         public void Join(string name, string conectionId)
         {
-            using (var scope = State.ServiceProvider.CreateScope())
+            using(var scope = State.ServiceProvider.CreateScope())
             {
                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
                 InGamePlayerDTO player = _PlayerService.GetPlayerInGame(name);
 
-                if (this.CanJoin())
+                if(CanJoin())
                 {
-                    this._allPlayers.Add(conectionId, player);
+                    _allPlayers.Add(conectionId, player);
 
-                    if (this.CanStart())
+                    if(CanStart())
                     {
-                        this.SetStartTimer();
+                        SetStartTimer();
                     }
                 }
             }
@@ -432,7 +432,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>De hoeveelheid spelers.</returns>
         public int GetAmountOfPlayers()
         {
-            return this._allPlayers.Count();
+            return _allPlayers.Count();
         }
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace QuizRoyaleAPI.Models
         /// </summary>
         private void SetStartTimer()
         {
-            if (_startDelayTimer != null)
+            if(_startDelayTimer != null)
             {
                 // Reset de timer als en nieuwe deelnemer binnekomt.
                 _startDelayTimer.Stop();
@@ -448,8 +448,8 @@ namespace QuizRoyaleAPI.Models
             }
             else
             {
-                _startDelayTimer = new System.Timers.Timer(5000); 
-                _startDelayTimer.Elapsed += this.startGame;
+                _startDelayTimer = new System.Timers.Timer(5000);
+                _startDelayTimer.Elapsed += startGame;
                 _startDelayTimer.AutoReset = false;
                 _startDelayTimer.Enabled = true;
             }
@@ -462,7 +462,7 @@ namespace QuizRoyaleAPI.Models
         /// <param name="e">EventArgs</param>
         private void startGame(Object source, ElapsedEventArgs e)
         {
-            this.Start();
+            Start();
 
         }
 
@@ -474,7 +474,7 @@ namespace QuizRoyaleAPI.Models
         {
             IList<InGamePlayerDTO> names = new List<InGamePlayerDTO>();
 
-            foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
+            foreach(KeyValuePair<string, InGamePlayerDTO> player in _allPlayers)
             {
                 names.Add(player.Value);
             }
@@ -489,7 +489,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>Een InGamePlayerDTO</returns>
         public InGamePlayerDTO GetPlayerObj(string name)
         {
-            using (var scope = State.ServiceProvider.CreateScope())
+            using(var scope = State.ServiceProvider.CreateScope())
             {
                 var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
                 InGamePlayerDTO player = _PlayerService.GetPlayerInGame(name);
@@ -504,7 +504,7 @@ namespace QuizRoyaleAPI.Models
         public IList<CategoryIntensityDTO> GetCategories()
         {
             IList<CategoryIntensityDTO> list = new List<CategoryIntensityDTO>();
-            foreach (KeyValuePair<CategoryDTO, float> cat in this.Categories)
+            foreach(KeyValuePair<CategoryDTO, float> cat in Categories)
             {
                 list.Add(new CategoryIntensityDTO(cat.Key, cat.Value));
             }

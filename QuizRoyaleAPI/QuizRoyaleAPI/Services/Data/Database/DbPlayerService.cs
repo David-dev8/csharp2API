@@ -47,14 +47,14 @@ namespace QuizRoyaleAPI.Services.Data.Database
         {
             var player = new Player(username);
             // Controleer of de gegeven gebruikersnaam niet al gekozen is
-            if (_context.Players.Any(p => p.Username == username))
+            if(_context.Players.Any(p => p.Username == username))
             {
                 throw new UsernameTakenException();
             }
             _context.Players.Add(player);
             SetDefaultItems(player);
             _context.SaveChanges();
-            
+
             return player.Id;
         }
 
@@ -78,7 +78,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
         public InGamePlayerDTO GetPlayerInGame(string username)
         {
             Player? player = _context.Players.Where(p => p.Username == username).FirstOrDefault();
-            if (player == null)
+            if(player == null)
             {
                 throw new PlayerNotFoundException();
             }
@@ -103,7 +103,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
         private Player GetPlayerFromDB(int userId)
         {
             Player? player = _context.Players.Find(userId);
-            if (player == null)
+            if(player == null)
             {
                 throw new PlayerNotFoundException();
             }
@@ -147,7 +147,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
             Item? item = GetSingleItemByType(items, itemType);
             if(item != null)
             {
-                player.AcquiredItems.Add(new AcquiredItem {ItemId = item.Id, Equipped = true });
+                player.AcquiredItems.Add(new AcquiredItem { ItemId = item.Id, Equipped = true });
             }
         }
 
@@ -165,7 +165,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
             Player player = GetPlayerFromDB(username);
             Category category = GetCategoryFromDB(questionId);
             CategoryMastery? mastery = player.Mastery.Where(m => m.CategoryId == category.Id).FirstOrDefault();
-            if(mastery != null) 
+            if(mastery != null)
             {
                 mastery.AmountOfQuestions++;
                 if(isCorrect)

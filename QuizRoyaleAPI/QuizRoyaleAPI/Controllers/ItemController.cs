@@ -46,7 +46,7 @@ namespace QuizRoyaleAPI.Controllers
         }
 
         [HttpPatch("Obtain/{itemId}")]
-        public IActionResult ObtainItem([FromRoute]int itemId)
+        public IActionResult ObtainItem([FromRoute] int itemId)
         {
             _itemService.ObtainItem(User.GetID(), itemId);
             return Ok();

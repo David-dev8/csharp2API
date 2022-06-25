@@ -31,7 +31,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
             Player player = GetPlayer(userId);
             Item item = GetItem(itemId);
 
-            if (CanAfford(item, player))
+            if(CanAfford(item, player))
             {
                 player.AcquiredItems.Add(new AcquiredItem { ItemId = item.Id });
                 PayForItem(item, player);
@@ -48,7 +48,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
             Player player = GetPlayer(userId);
             Item item = GetItem(itemId);
 
-            if (player.AcquiredItems.Where((i) => i.ItemId == itemId) == null)
+            if(player.AcquiredItems.Where((i) => i.ItemId == itemId) == null)
             {
                 throw new ItemNotFoundException();
             }
@@ -88,7 +88,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
         private Player GetPlayer(int userId)
         {
             Player? player = _context.Players.Find(userId);
-            if (player == null)
+            if(player == null)
             {
                 throw new PlayerNotFoundException();
             }
@@ -98,7 +98,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
         private Item GetItem(int itemId)
         {
             Item? item = _context.Items.Find(itemId);
-            if (item == null)
+            if(item == null)
             {
                 throw new ItemNotFoundException();
             }
@@ -135,7 +135,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
             amountOfTooMuchItems++;
 
             // Unequip alle items die teveel zijn
-            foreach (AcquiredItem item in items.Take(amountOfTooMuchItems))
+            foreach(AcquiredItem item in items.Take(amountOfTooMuchItems))
             {
                 item.Equipped = false;
             }

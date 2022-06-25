@@ -12,7 +12,8 @@ namespace QuizRoyaleAPI.Models
 
         public static IServiceProvider ServiceProvider { get; set; }
 
-        public static IHubContext<GameHub> GetHubContext() {
+        public static IHubContext<GameHub> GetHubContext()
+        {
             return ServiceProvider.GetRequiredService<IHubContext<GameHub>>();
         }
     }

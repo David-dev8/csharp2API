@@ -3,9 +3,9 @@
     /// <summary>
     /// UsernameTakenException, Een exceptie voor waarneer een gebruiker wil registreeren met een bestaande naam
     /// </summary>
-    public class UsernameTakenException: Exception
+    public class UsernameTakenException : Exception
     {
-        public UsernameTakenException(): base("The username is already taken")
+        public UsernameTakenException() : base("The username is already taken")
         {
         }
     }

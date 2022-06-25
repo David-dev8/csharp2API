@@ -8,7 +8,7 @@ namespace QuizRoyaleAPI.Services.Auth
     /// <summary>
     /// UserJWTAuthService, Regelt alle autheticatie met betrekking tot spelers
     /// </summary>
-    public class UserJWTAuthService: IAuthService
+    public class UserJWTAuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
 
@@ -20,7 +20,7 @@ namespace QuizRoyaleAPI.Services.Auth
         public TokenDTO GetToken(int id)
         {
             return new TokenDTO(GenerateToken(id));
-            
+
         }
 
         /// <summary>

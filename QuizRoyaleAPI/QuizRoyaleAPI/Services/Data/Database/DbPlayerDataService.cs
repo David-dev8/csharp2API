@@ -105,7 +105,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
         private Player GetPlayer(int userId)
         {
             Player? player = _context.Players.Find(userId);
-            if (player == null)
+            if(player == null)
             {
                 throw new PlayerNotFoundException();
             }
@@ -117,7 +117,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
             if(GetPlayer(userId).AmountOfWins == 0)
             {
                 return 100;
-            } 
+            }
             else
             {
                 int position = _context.Players.OrderByDescending(p => p.AmountOfWins).ToList().FindIndex((p) => p.Id == userId);

@@ -7,7 +7,7 @@ namespace QuizRoyaleAPI.Services.Data.Database
     /// <summary>
     /// DbQuestionService, Een implementatie van de QuestionService die communiceert met een database
     /// </summary>
-    public class DbQuestionService: IQuestionService
+    public class DbQuestionService : IQuestionService
     {
         private readonly QuizRoyaleDbContext _context;
 

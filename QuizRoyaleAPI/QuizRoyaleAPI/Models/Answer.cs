@@ -10,7 +10,7 @@ namespace QuizRoyaleAPI.Models
         public int Id { get; set; }
 
         public char Code { get; set; }
-        
+
         [MaxLength(255)]
         public string Description { get; set; }
 

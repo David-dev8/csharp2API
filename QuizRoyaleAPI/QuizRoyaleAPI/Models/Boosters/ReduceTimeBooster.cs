@@ -17,7 +17,7 @@ namespace QuizRoyaleAPI.Models.Boosters
         {
             game.QuestionTimer.Stop();
             game.SetTimer(2000);
-            this.Anounce();
+            Anounce();
         }
 
         /// <summary>

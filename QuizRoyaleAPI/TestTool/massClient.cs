@@ -12,7 +12,7 @@ namespace TestTool
 
         public MassClient(int totalPlayers)
         {
-            this._totalPlayers = totalPlayers;
+            _totalPlayers = totalPlayers;
             _connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:5264/GameHub")
                 .Build();
@@ -35,7 +35,7 @@ namespace TestTool
                 await _connection.StartAsync();
                 await _connection.InvokeAsync("Join", name);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
             }
         }

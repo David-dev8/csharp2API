@@ -28,7 +28,7 @@ builder.Services.AddJWT(builder.Configuration.GetSection("Authentication:Key").V
 var app = builder.Build();
 
 // Stel de HTTP request pipeline in.
-if (app.Environment.IsDevelopment())
+if(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

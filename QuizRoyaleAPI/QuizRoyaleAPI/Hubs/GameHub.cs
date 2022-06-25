@@ -20,7 +20,7 @@ namespace QuizRoyaleAPI.Hubs
         {
             InitializeGame();
 
-            if (State.CurrentGame.CanJoin())
+            if(State.CurrentGame.CanJoin())
             {
                 try
                 {
@@ -28,7 +28,7 @@ namespace QuizRoyaleAPI.Hubs
 
                     // Stuurt alleen een melding naar de client die wil joinen
                     int playersLeft = State.CurrentGame.MinimumPlayers - State.CurrentGame.GetAmountOfPlayers();
-                    if (playersLeft >= 0)
+                    if(playersLeft >= 0)
                     {
                         await SendJoined(playersLeft);
                     }
@@ -36,17 +36,17 @@ namespace QuizRoyaleAPI.Hubs
                     InGamePlayerDTO player = State.CurrentGame.GetPlayerObj(username);
                     await Clients.Others.SendAsync("newPlayerJoin", player, "We are waiting for " + playersLeft + " spelers");
 
-                    if (State.CurrentGame.CanStart())
+                    if(State.CurrentGame.CanStart())
                     {
                         await Clients.All.SendAsync("updateStatus", "The game will start soon");
                     }
                 }
-                catch 
+                catch
                 {
                     await SendNotStarted();
                 }
             }
-            else 
+            else
             {
                 await SendNotStarted();
             }
@@ -55,7 +55,7 @@ namespace QuizRoyaleAPI.Hubs
         // Initialiseert de game als deze nog niet bestaat
         private void InitializeGame()
         {
-            if (State.CurrentGame == null)
+            if(State.CurrentGame == null)
             {
                 State.CurrentGame = GameFactory.GetGame(DEFAULT_QUESTION_TIME);
             }
@@ -106,7 +106,7 @@ namespace QuizRoyaleAPI.Hubs
         /// <returns>Afhankelijk van de boost die gebruikt wordt.</returns>
         public async Task UseBoost(string type, string options)
         {
-            if (options == "")
+            if(options == "")
             {
                 options = Context.ConnectionId;
             }
