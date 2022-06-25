@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace QuizRoyaleAPI.Models
 {
     /// <summary>
-    /// Dit is een Player object
+    /// Dit is een Player object.
     /// </summary>
     [Index(nameof(Player.Username), IsUnique = true)]
     public class Player

@@ -1,7 +1,7 @@
 ﻿namespace QuizRoyaleAPI.Models.BadgeRule
 {
     /// <summary>
-    /// Dit is de badgeRule voor de winstreak badge
+    /// Dit is de badgeRule voor de winstreak badge.
     /// </summary>
     public class WinStreakBadgeRule : IBadgeRule
     {

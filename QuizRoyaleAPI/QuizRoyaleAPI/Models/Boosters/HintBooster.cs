@@ -4,16 +4,16 @@ using QuizRoyaleAPI.DTOs;
 namespace QuizRoyaleAPI.Models.Boosters
 {
     /// <summary>
-    /// De Hint Booster
-    /// Deze booster geeft je een hint in game
+    /// De Hint Booster.
+    /// Deze booster geeft je een hint in game.
     /// </summary>
     public class HintBooster : Booster
     {
         /// <summary>
-        /// Gebruik de boost
+        /// Gebruik de boost.
         /// </summary>
-        /// <param name="game">De game waarop deze booster moet worden gebruikt</param>
-        /// <param name="options">De conectieID van de speler die de boost gebruikt</param>
+        /// <param name="game">De game waarop deze booster moet worden gebruikt.</param>
+        /// <param name="options">De conectieID van de speler die de boost gebruikt.</param>
         public void Use(Game game, string options)
         {
             Random random = new Random();
@@ -23,7 +23,7 @@ namespace QuizRoyaleAPI.Models.Boosters
         }
 
         /// <summary>
-        /// Laat een persoon weten dat een paar gegeven antwoorden onjuist zijn
+        /// Laat een persoon weten dat een paar gegeven antwoorden onjuist zijn.
         /// </summary>
         /// <returns>void</returns>
         private async Task Anounce(string connectionId, IList<AnswerDTO> wrongAnswers)

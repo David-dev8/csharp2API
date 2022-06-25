@@ -5,8 +5,8 @@ using QuizRoyaleAPI.Services.Data;
 namespace QuizRoyaleAPI.Controllers
 {
     /// <summary>
-    /// Player database Controller, Meer informatie over de player endpoints zijn te vinden in swagger
-    /// Deze klasse handeld het ophalen van extra data van een player af
+    /// Player database Controller, Meer informatie over de player endpoints zijn te vinden in swagger.
+    /// Deze klasse handelt het ophalen van extra data van een player af.
     /// </summary>
     [ApiController]
     [Authorize]

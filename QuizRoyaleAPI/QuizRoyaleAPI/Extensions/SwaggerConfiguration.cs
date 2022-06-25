@@ -1,14 +1,14 @@
 ﻿namespace QuizRoyaleAPI.Extensions
 {
     /// <summary>
-    /// SwaggerConfiguration, Deze statiche klasse heeft een methode om swagger te regelen
+    /// SwaggerConfiguration, Deze statische klasse heeft een methode om swagger te regelen.
     /// </summary>
     public static class SwaggerConfiguration
     {
         /// <summary>
-        /// Deze mehode set alle instellingen met betrekking tot Swagger op voor de documentatie
+        /// Deze mehode set alle instellingen met betrekking tot Swagger op voor de documentatie.
         /// </summary>
-        /// <param name="services">Alle extensions</param>
+        /// <param name="services">Alle extensions.</param>
         public static void AddSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>

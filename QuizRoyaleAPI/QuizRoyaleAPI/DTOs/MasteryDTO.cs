@@ -6,6 +6,7 @@
     public class CategoryIntensityDTO
     {
         public CategoryDTO Category { get; set; }
+
         public double Intensity { get; set; }
 
         public CategoryIntensityDTO(CategoryDTO category, double intensity)

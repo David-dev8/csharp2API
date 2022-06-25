@@ -1,7 +1,7 @@
 ﻿namespace QuizRoyaleAPI.DTOs
 {
     /// <summary>
-    /// BadgeDTO, Dit is een DTO object voor een Badge
+    /// BadgeDTO, Dit is een DTO object voor een Badge.
     /// </summary>
     public class BadgeDTO
     {

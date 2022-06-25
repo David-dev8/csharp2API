@@ -1,7 +1,7 @@
 ﻿namespace QuizRoyaleAPI.DTOs
 {
     /// <summary>
-    /// AnswerDTO, Dit is een DTO object voor een Awnser
+    /// AnswerDTO, Dit is een DTO object voor een Awnser.
     /// </summary>
     public class AnswerDTO
     {

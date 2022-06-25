@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace QuizRoyaleAPI.Models
 {
     /// <summary>
-    /// Dit is een Item object
+    /// Dit is een Item object.
     /// </summary>
     public class Item
     {

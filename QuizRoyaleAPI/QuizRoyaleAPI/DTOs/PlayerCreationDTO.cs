@@ -1,8 +1,8 @@
 ﻿namespace QuizRoyaleAPI.DTOs
 {
     /// <summary>
-    /// PlayerCreationDTO, Dit is een DTO object voor PlayerCreation
-    /// Dit wordt gebruikt zodra een nieuwe speler zich registreerd
+    /// PlayerCreationDTO, Dit is een DTO object voor PlayerCreation.
+    /// Dit wordt gebruikt zodra een nieuwe speler zich registreert.
     /// </summary>
     public class PlayerCreationDTO
     {
