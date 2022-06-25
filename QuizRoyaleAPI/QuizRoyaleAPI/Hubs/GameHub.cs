@@ -94,7 +94,6 @@ namespace QuizRoyaleAPI.Hubs
         /// <returns>Void</returns>
         public async Task AnswerQuestion(char awnserID)
         {
-            Console.WriteLine(Context.ConnectionId + " wil " + awnserID + " antwoorden!");
             State.CurrentGame.AnswerQuestion(awnserID, Context.ConnectionId);
         }
 
@@ -110,7 +109,6 @@ namespace QuizRoyaleAPI.Hubs
             {
                 options = Context.ConnectionId;
             }
-            Console.WriteLine(Context.ConnectionId + " Wil een " + type + " booster gebruiken! met de opties: " + options);
             State.CurrentGame.UseBoost(type, options, Context.ConnectionId);
         }
     }

@@ -118,7 +118,6 @@ namespace QuizRoyaleAPI.Models
         /// <param name="e">EventArgs</param>
         private void NextQuestion(object? source, ElapsedEventArgs e)
         {
-            Console.WriteLine("We gaan nu een nieuwe vraag kiezen");
             if(CurrentQuestion != null)
             {
                 SendResultsFromLastQuestion();
@@ -160,8 +159,7 @@ namespace QuizRoyaleAPI.Models
         /// <returns>stuurt de QuestionDTO op naar alle clients.</returns>
         public async Task SendNewQuestion()
         {
-            await State.GetHubContext().Clients.All.SendAsync("newQuestion", CurrentQuestion);// Documented
-            Console.WriteLine("----------------> " + CurrentQuestion.RightAnswer + " is het goede antwoord <-----------------");
+            await State.GetHubContext().Clients.All.SendAsync("newQuestion", CurrentQuestion); // Documented
         }
 
         /// <summary>
@@ -170,7 +168,6 @@ namespace QuizRoyaleAPI.Models
         private void SendResultsFromLastQuestion()
         {
             EliminatePlayers(GetPlayersToEliminate());
-            Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn naa de purge");
 
             State.GetHubContext().Clients.All.SendAsync("playersLeft", _allPlayers.Values); // Doucumented
 
@@ -215,18 +212,15 @@ namespace QuizRoyaleAPI.Models
                             _PlayerService.RegisterAnswer(player.Value.Username, true, CurrentQuestion.Id);
                             _PlayerService.GiveRewards(player.Value.Username, QUESTION_XP, QUESTION_COINS);
                             SendResultToPlayer(player.Key, true, QUESTION_XP, QUESTION_COINS);
-                            Console.WriteLine(player.Value.Username + " heeft het goed!");
                         }
                         else
                         {
                             _PlayerService.RegisterAnswer(player.Value.Username, false, CurrentQuestion.Id);
                             SendResultToPlayer(player.Key, false, 0, 0);
-                            Console.WriteLine(player.Value.Username + " heeft geen goed antwoord gegegeven!");
                             playersToEliminate.Add(player.Key);
                         }
                     }
                 }
-                Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn voor de purge");
                 return playersToEliminate;
             }
             else
@@ -252,7 +246,6 @@ namespace QuizRoyaleAPI.Models
         {
             State.CurrentGame = null;
             RemoveTimers();
-            Console.WriteLine("gelijkspelgelijkspelgelijkspelgelijkspelgelijkspelgelijkspel");
         }
 
         /// <summary>
@@ -271,10 +264,9 @@ namespace QuizRoyaleAPI.Models
                 _PlayerService.RegisterResult(winnerName, Mode.QUIZ_ROYALE, 1);
             }
 
-            await State.GetHubContext().Clients.All.SendAsync("Win", WIN_XP, WIN_COINS);// Documented
+            await State.GetHubContext().Clients.All.SendAsync("Win", WIN_XP, WIN_COINS); // Documented
             State.CurrentGame = null;
             RemoveTimers();
-            Console.WriteLine("winnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnnwinnn");
         }
 
         /// <summary>
@@ -340,14 +332,6 @@ namespace QuizRoyaleAPI.Models
                 playerService.removeItem(_allPlayers[conncectionId].Username, type);
             }
             _boosterFactory.GetBooster(type).Use(this, options);
-            Console.WriteLine("De kansen zijn Nu: ");
-            float totaal = 0;
-            foreach(KeyValuePair<CategoryDTO, float> chance in Categories)
-            {
-                Console.WriteLine(chance.Key.Name + " Heeft nu een kans van " + chance.Value + "%");
-                totaal += chance.Value;
-                Console.WriteLine("Totaal is nu " + totaal + "%");
-            }
         }
 
         /// <summary>
@@ -382,7 +366,6 @@ namespace QuizRoyaleAPI.Models
         {
             if(CanStart())
             {
-                Console.WriteLine("De game gaat nu starten");
                 await State.GetHubContext().Clients.All.SendAsync("start"); // Documented
                 SetTimer(10);
                 _inProgress = true;
