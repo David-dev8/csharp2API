@@ -1,7 +1,6 @@
 ﻿using System.Timers;
 using QuizRoyaleAPI.Services.Data;
 using QuizRoyaleAPI.DTOs;
-using QuizRoyaleAPI.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using QuizRoyaleAPI.Enums;
 
@@ -41,6 +40,12 @@ namespace QuizRoyaleAPI.Models
             this._questionTimeInMili = questionTimeInMili;
             this._inProgress = false;
 
+            RegisterCategories();
+        }
+
+        // Haal alle categorieën op en sla deze op.
+        private void RegisterCategories()
+        {
             using (var scope = State.ServiceProvider.CreateScope())
             {
                 var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
@@ -119,8 +124,8 @@ namespace QuizRoyaleAPI.Models
                 this.SendResultsFromLastQuestion();
             }
 
-            Random rnd = new Random();
-            int randomInt = rnd.Next(100);
+            Random random = new Random();
+            int randomInt = random.Next(100);
             float counter = 0;
 
             foreach (CategoryDTO cat in this.Categories.Keys)
@@ -130,16 +135,22 @@ namespace QuizRoyaleAPI.Models
 
                 if (randomInt <= counter)
                 {
-                    using (var scope = State.ServiceProvider.CreateScope())
-                    {
-                        var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
-                        this.CurrentQuestion = _QuestionService.GetQuestionByCategoryId(cat.Id);
-                        CurrentQuestion.Category = cat;
-                        this.SendNewQuestion();
-                        this.SetCooldownTimer();
-                        break;
-                    }
+                    SelectQuestion(cat);
+                    break;
                 }
+            }
+        }
+
+        // Selecteer een vraag voor de gegeven categorie
+        private void SelectQuestion(CategoryDTO cat)
+        {
+            using (var scope = State.ServiceProvider.CreateScope())
+            {
+                var _QuestionService = scope.ServiceProvider.GetRequiredService<IQuestionService>();
+                this.CurrentQuestion = _QuestionService.GetQuestionByCategoryId(cat.Id);
+                CurrentQuestion.Category = cat;
+                this.SendNewQuestion();
+                this.SetCooldownTimer();
             }
         }
 
@@ -158,17 +169,48 @@ namespace QuizRoyaleAPI.Models
         /// </summary>
         private void SendResultsFromLastQuestion()
         {
-            ICollection<string> playersToEliminate = new List<string>();
+            EliminatePlayers(GetPlayersToEliminate());
+            Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn naa de purge");
+
+            State.GetHubContext().Clients.All.SendAsync("playersLeft", this._allPlayers.Values); // Doucumented
+
+            if (this._allPlayers.Count == 0)
+            {
+                this.EndTie();
+            }
+            else if (this._allPlayers.Count == 1) 
+            {
+                this.EndWin(this._allPlayers.First().Value.Username);
+            }
+        }
+
+        // Elimineer alle spelers met de gegeven collectie van connectie ids.
+        private void EliminatePlayers(ICollection<string> playersToEliminate)
+        {
+            int finalPosition = _allPlayers.Count;
+            using (var scope = State.ServiceProvider.CreateScope())
+            {
+                var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
+                foreach (string id in playersToEliminate)
+                {
+                    _PlayerService.RegisterResult(_allPlayers[id].Username, Mode.QUIZ_ROYALE, finalPosition);
+                    this.EliminatePlayer(id);
+                }
+            }
+        }
+
+        // Haal alle spelers op die geëlimineerd moeten worden.
+        private ICollection<string> GetPlayersToEliminate()
+        {
             if (this._allResponses.Count > 0)
             {
+                ICollection<string> playersToEliminate = new List<string>();
                 using (var scope = State.ServiceProvider.CreateScope())
                 {
                     var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
-
                     foreach (KeyValuePair<string, InGamePlayerDTO> player in this._allPlayers)
                     {
-                        if (_allResponses.ContainsKey(player.Value)
-                            && (_allResponses[player.Value] == this.CurrentQuestion.RightAnswer || this._allResponses[player.Value] == '*'))
+                        if (HasToBeEliminated(player.Value))
                         {
                             _PlayerService.RegisterAnswer(player.Value.Username, true, CurrentQuestion.Id);
                             _PlayerService.GiveRewards(player.Value.Username, QUESTION_XP, QUESTION_COINS);
@@ -185,34 +227,19 @@ namespace QuizRoyaleAPI.Models
                     }
                 }
                 Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn voor de purge");
+                return playersToEliminate;
             }
             else
             {
-                playersToEliminate = _allPlayers.Keys;
+                return _allPlayers.Keys;
             }
+        }
 
-            int finalPosition = _allPlayers.Count;
-            using (var scope = State.ServiceProvider.CreateScope())
-            {
-                var _PlayerService = scope.ServiceProvider.GetRequiredService<IPlayerService>();
-                foreach (string id in playersToEliminate)
-                {
-                    _PlayerService.RegisterResult(_allPlayers[id].Username, Mode.QUIZ_ROYALE, finalPosition);
-                    this.EliminatePlayer(id);
-                }
-            }
-            Console.WriteLine(_allPlayers.Count + " <-- dit is hoeveel spelers er over zijn naa de purge");
-
-            State.GetHubContext().Clients.All.SendAsync("playersLeft", this._allPlayers.Values); // Doucumented
-
-            if (this._allPlayers.Count == 0)
-            {
-                this.EndTie();
-            }
-            else if (this._allPlayers.Count == 1) 
-            {
-                this.EndWin(this._allPlayers.First().Value.Username);
-            }
+        // Controleert of een speler door mag gaan in het spel of geëlimineerd moet worden.
+        private bool HasToBeEliminated(InGamePlayerDTO player)
+        {
+            return _allResponses.ContainsKey(player)
+                && (_allResponses[player] == this.CurrentQuestion.RightAnswer || this._allResponses[player] == '*');
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using QuizRoyaleAPI.DataAccess;
 using QuizRoyaleAPI.DTOs;
-using Microsoft.EntityFrameworkCore;
 using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.Services.Data.Database

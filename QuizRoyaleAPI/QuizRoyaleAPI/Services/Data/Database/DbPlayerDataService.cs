@@ -3,7 +3,6 @@ using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Exceptions;
 using QuizRoyaleAPI.Models;
 using QuizRoyaleAPI.Models.BadgeRule;
-using QuizRoyaleAPI.Enums;
 
 namespace QuizRoyaleAPI.Services.Data.Database
 {

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.SignalR;
 using QuizRoyaleAPI.Extensions;
 using QuizRoyaleAPI.Hubs;
 

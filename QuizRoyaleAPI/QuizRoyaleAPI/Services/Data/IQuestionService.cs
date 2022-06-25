@@ -17,7 +17,7 @@ namespace QuizRoyaleAPI.Services.Data
         /// <summary>
         /// Haalt een vraag op voor een gegeven categorie
         /// </summary>
-        /// <param name="categoryId">De ID van de categorie waarvan jee een vraag wil</param>
+        /// <param name="categoryId">De ID van de categorie waarvan je een vraag wilt</param>
         /// <returns>Een QuestionDTO</returns>
         public QuestionDTO GetQuestionByCategoryId(int categoryId);
     }

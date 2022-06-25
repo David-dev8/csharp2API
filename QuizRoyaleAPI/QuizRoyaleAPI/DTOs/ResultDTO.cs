@@ -1,5 +1,4 @@
 ﻿using QuizRoyaleAPI.Enums;
-using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.DTOs
 {

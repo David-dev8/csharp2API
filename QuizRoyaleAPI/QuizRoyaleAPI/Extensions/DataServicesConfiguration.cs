@@ -1,7 +1,6 @@
 ﻿using QuizRoyaleAPI.Services.Auth;
 using QuizRoyaleAPI.Services.Data;
 using QuizRoyaleAPI.Services.Data.Database;
-using QuizRoyaleAPI.Models;
 
 namespace QuizRoyaleAPI.Extensions
 {

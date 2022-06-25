@@ -1,10 +1,6 @@
-﻿using System;
-using System.Timers;
-using System.Web;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using QuizRoyaleAPI.DTOs;
 using QuizRoyaleAPI.Models;
-using QuizRoyaleAPI.Services.Data;
 
 namespace QuizRoyaleAPI.Hubs
 {
@@ -13,6 +9,8 @@ namespace QuizRoyaleAPI.Hubs
     /// </summary>
     public class GameHub : Hub
     {
+        private const int DEFAULT_QUESTION_TIME = 10000;
+
         /// <summary>
         /// Deze methode kan worden aangeroepen door een client om te proberen te joinen.
         /// </summary>
@@ -20,11 +18,7 @@ namespace QuizRoyaleAPI.Hubs
         /// <returns>Een joinstatus event naar de client.</returns>
         public async Task Join(string username)
         {
-            Console.WriteLine(username + " wil Joinen");
-            if (State.CurrentGame == null)
-            {
-                State.CurrentGame = GameFactory.GetGame(10000);
-            }
+            InitializeGame();
 
             if (State.CurrentGame.CanJoin())
             {
@@ -36,11 +30,7 @@ namespace QuizRoyaleAPI.Hubs
                     int playersLeft = State.CurrentGame.MinimumPlayers - State.CurrentGame.GetAmountOfPlayers();
                     if (playersLeft >= 0)
                     {
-                        string message = playersLeft == 0 ? "The game will start soon" : 
-                            "Welcome, we are currently waiting for " + playersLeft + " players";
-                        IList<InGamePlayerDTO> players = State.CurrentGame.GetPlayerNames();
-                        IList<CategoryIntensityDTO> categories = State.CurrentGame.GetCategories();
-                        await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
+                        await SendJoined(playersLeft);
                     }
 
                     InGamePlayerDTO player = State.CurrentGame.GetPlayerObj(username);
@@ -53,15 +43,38 @@ namespace QuizRoyaleAPI.Hubs
                 }
                 catch 
                 {
-                    // Stuurt alleen een melding naar de client die wil joinen
-                    await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<CategoryIntensityDTO>());
+                    await SendNotStarted();
                 }
             }
             else 
             {
-                // Stuurt alleen een melding naar de client die wil joinen
-                await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<CategoryIntensityDTO>()) ;
+                await SendNotStarted();
             }
+        }
+
+        // Initialiseert de game als deze nog niet bestaat
+        private void InitializeGame()
+        {
+            if (State.CurrentGame == null)
+            {
+                State.CurrentGame = GameFactory.GetGame(DEFAULT_QUESTION_TIME);
+            }
+        }
+
+        // Stuurt alleen een melding naar de client die wil joinen
+        private async Task SendNotStarted()
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", false, "", new string[] { }, new List<CategoryIntensityDTO>());
+        }
+
+        // Stuurt een melding naar de client die wil joinen dat hij gejoind is en geef hem een geschikte melding
+        private async Task SendJoined(int playersLeft)
+        {
+            string message = playersLeft == 0 ? "The game will start soon" :
+                            "Welcome, we are currently waiting for " + playersLeft + " players";
+            IList<InGamePlayerDTO> players = State.CurrentGame.GetPlayerNames();
+            IList<CategoryIntensityDTO> categories = State.CurrentGame.GetCategories();
+            await Clients.Client(Context.ConnectionId).SendAsync("joinStatus", true, message, players, categories);
         }
 
         /// <summary>

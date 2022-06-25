@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using QuizRoyaleAPI.Hubs;
-using QuizRoyaleAPI.Services.Data;
-
-namespace QuizRoyaleAPI.Models
+﻿namespace QuizRoyaleAPI.Models
 {
     /// <summary>
     /// Dit is de interface voor een game factory
