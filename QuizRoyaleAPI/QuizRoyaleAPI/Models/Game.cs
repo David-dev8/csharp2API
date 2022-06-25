@@ -94,7 +94,7 @@ namespace QuizRoyaleAPI.Models
         /// </summary>
         /// <param name="source">source</param>
         /// <param name="e">eventArgs</param>
-        private void StartNextQuestion(Object source, ElapsedEventArgs e)
+        private void StartNextQuestion(object? source, ElapsedEventArgs e)
         {
             SetTimer(_questionTimeInMili);
             NotifyNextQuestion();

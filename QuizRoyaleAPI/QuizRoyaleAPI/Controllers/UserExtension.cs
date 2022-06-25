@@ -9,7 +9,12 @@ namespace QuizRoyaleAPI.Controllers
     {
         public static int GetID(this ClaimsPrincipal User)
         {
-            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            Claim? idClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if(idClaim == null)
+            {
+                throw new ArgumentNullException();
+            }
+            return int.Parse(idClaim.Value);
         }
     }
 }
