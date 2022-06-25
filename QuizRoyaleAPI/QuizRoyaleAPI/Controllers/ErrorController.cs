@@ -5,7 +5,7 @@ using QuizRoyaleAPI.Exceptions;
 namespace QuizRoyaleAPI.Controllers
 {
     /// <summary>
-    /// ErrorController, handeled alle unhandled errors en geeft de corecte statuscode voor de fout terug.
+    /// ErrorController, handelt alle unhandled errors af en geeft de corecte statuscode voor de fout terug.
     /// </summary>
     [ApiController]
     [ApiExplorerSettings(IgnoreApi = true)]

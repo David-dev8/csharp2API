@@ -1,7 +1,7 @@
 ﻿namespace QuizRoyaleAPI.Models
 {
     /// <summary>
-    /// Dit is het categoryMastery object
+    /// Dit is het categoryMastery object.
     /// </summary>
     public class CategoryMastery
     {

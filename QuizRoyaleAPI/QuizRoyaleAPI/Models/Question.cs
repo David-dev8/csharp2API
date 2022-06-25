@@ -3,7 +3,7 @@
 namespace QuizRoyaleAPI.Models
 {
     /// <summary>
-    /// Dit is een Question object
+    /// Dit is een Question object.
     /// </summary>
     public class Question
     {

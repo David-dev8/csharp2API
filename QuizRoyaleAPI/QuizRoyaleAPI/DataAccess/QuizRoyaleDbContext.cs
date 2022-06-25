@@ -13,7 +13,7 @@ namespace QuizRoyaleAPI.DataAccess
         /// <summary>
         /// Creëert een QuizRoyaleDbContext met de gegeven opties.
         /// </summary>
-        /// <param name="options">Opties voor de context</param>
+        /// <param name="options">Opties voor de context.</param>
         public QuizRoyaleDbContext(DbContextOptions options) : base(options)
         {
         }
